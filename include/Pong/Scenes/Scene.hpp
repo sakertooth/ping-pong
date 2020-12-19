@@ -8,7 +8,7 @@ namespace Pong
 		class Scene
 		{
 		public:
-			virtual void draw() = 0;
+			virtual void draw(sf::RenderTarget& target) = 0;
 			virtual void update(float deltaTime) = 0;
 			virtual void handleEvent(sf::Event& event) = 0;
 		};

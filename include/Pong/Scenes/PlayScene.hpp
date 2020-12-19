@@ -1,18 +1,22 @@
 #pragma once
 #include <Pong/Scenes/Scene.hpp>
+#include <Pong/Scenes/SceneManager.hpp>
 #include <SFML/Graphics.hpp>
+#include <TGUI/TGUI.hpp>
 
 namespace Pong
 {
 	namespace Scenes
 	{
-		class PlayScene : public Scene
+		class PlayScene : public Scene, public tgui::Gui
 		{
-			sf::Text m_pressSpacebarText;
-			sf::RectangleShape m_paddleOne;
-			sf::RectangleShape m_paddleTwo;
+			tgui::Label::Ptr pressSpacebarLabel;
+			sf::RectangleShape paddleOne;
+			sf::RectangleShape paddleTwo;
+			bool started;
 		public:
-			void draw();
+			PlayScene(SceneManager& sceneManager, sf::RenderWindow& window);
+			void draw(sf::RenderTarget& target);
 			void update(float deltaTime);
 			void handleEvent(sf::Event& event);
 		};

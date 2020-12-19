@@ -5,58 +5,64 @@
 
 namespace Pong
 {
-	Game::Game() : m_running(true), m_window(sf::RenderWindow{ sf::VideoMode(640, 480), "Saker's Ping Pong" })
+	Game::Game() : window(sf::RenderWindow(sf::VideoMode(640, 480), "Saker's Ping Pong"))
 	{
-		/*m_sceneManager.addScene("Main Menu", std::make_shared<Scenes::MainMenuScene>());
-		m_sceneManager.addScene("Play", std::make_shared<Scenes::PlayScene>());
-		m_sceneManager.addScene("Credits", std::make_shared<Scenes::CreditsScene>());*/
+		sceneManager.addScene("Main Menu", std::make_shared<Scenes::MainMenuScene>(sceneManager, window));
+		sceneManager.addScene("Play", std::make_shared<Scenes::PlayScene>(sceneManager, window));
+		sceneManager.addScene("Credits", std::make_shared<Scenes::CreditsScene>(sceneManager, window));
 	}
 
-	void Game::draw()
+	void Game::run()
 	{
-		m_sceneManager.getActiveScene()->draw();
-	}
-
-	void Game::update(float deltaTime)
-	{
-		m_sceneManager.getActiveScene()->update(deltaTime);
-	}
-
-	void Game::handleEvents(sf::Event& event)
-	{
-		switch (event.type)
+		while (window.isOpen())
 		{
-		case sf::Event::Closed:
-			stop();
-			break;
-		default:
-			break;
+			sf::Event event;
+			while (window.pollEvent(event))
+			{
+				if (event.type == sf::Event::Closed)
+				{
+					window.close();
+					return;
+				}
+				sceneManager.getActiveScene()->handleEvent(event);
+			}
+
+			window.clear();
+			draw(window);
+			window.display();
+
+			update(deltaClock.getElapsedTime().asSeconds());
+			deltaClock.restart();
 		}
 	}
 
 	void Game::stop()
 	{
-		m_running = false;
+		window.close();
 	}
 
-	Game& Game::getInstance()
+	void Game::draw(sf::RenderTarget &target)
 	{
-		static Game game;
-		return game;
+		sceneManager.getActiveScene()->draw(target);
 	}
 
-	Scenes::SceneManager& Game::getSceneManager()
+	void Game::update(float deltaTime)
 	{
-		return m_sceneManager;
+		sceneManager.getActiveScene()->update(deltaTime);
 	}
 
-	sf::RenderWindow& Game::getWindow()
+	const sf::RenderWindow& Game::getWindow()
 	{
-		return m_window;
+		return window;
+	}
+
+	const Scenes::SceneManager& Game::getSceneManager()
+	{
+		return sceneManager;
 	}
 
 	const bool& Game::isRunning()
 	{
-		return m_running;
+		return window.isOpen();
 	}
 }

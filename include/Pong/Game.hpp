@@ -8,23 +8,19 @@ namespace Pong
 	class Game
 	{
 	private:
-		Game::Game();
-
-		Scenes::SceneManager m_sceneManager;
-		sf::RenderWindow m_window;
-		bool m_running;
+		sf::RenderWindow window;
+		sf::Clock deltaClock;
+		Scenes::SceneManager sceneManager;
 	public:
-		Game(const Game&) = delete;
-		Game& operator=(const Game&) = delete;
+		Game();
 
-		void draw();
-		void update(float deltaTime);
-		void handleEvents(sf::Event& event);
+		void run();
 		void stop();
-
-		static Game& getInstance();
-		sf::RenderWindow& getWindow();
-		Scenes::SceneManager& getSceneManager();
+		void draw(sf::RenderTarget& target);
+		void update(float deltaTime);
+		
+		const sf::RenderWindow& getWindow();
+		const Scenes::SceneManager& getSceneManager();
 		const bool& isRunning();
 	};
 }

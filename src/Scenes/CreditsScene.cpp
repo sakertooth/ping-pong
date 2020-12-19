@@ -5,28 +5,26 @@ namespace Pong
 {
 	namespace Scenes
 	{
-		CreditsScene::CreditsScene() : 
-			tgui::Gui(Game::getInstance().getWindow()),
-			m_goBackButton(tgui::Button::create("Go Back")),
-			m_creditsLabel(tgui::Label::create("Saker, @sakeronthebeat on Twitter"))
-		{
-			auto& sceneManager = Game::getInstance().getSceneManager();
-			
-			m_creditsLabel->getRenderer()->setTextColor(tgui::Color::White);
-			m_creditsLabel->setPosition("(&.size - size) / 2");
-			m_creditsLabel->setTextSize(16);
-			add(m_creditsLabel, "CreditsLabel");
+		CreditsScene::CreditsScene(SceneManager& sceneManager, sf::RenderWindow &window) : 
+			tgui::Gui(window),
+			goBackButton(tgui::Button::create("Go Back")),
+			creditsLabel(tgui::Label::create("Saker, @sakeronthebeat on Twitter"))
+		{			
+			creditsLabel->getRenderer()->setTextColor(tgui::Color::White);
+			creditsLabel->setPosition("(&.size - size) / 2");
+			creditsLabel->setTextSize(16);
+			add(creditsLabel, "CreditsLabel");
 
-			m_goBackButton->setPosition("(&.width - width) / 2", "(&.height - height) / 2 - 128");
-			m_goBackButton->setSize(240, 48);
-			m_goBackButton->connect("pressed", [&]()
+			goBackButton->setPosition("(&.width - width) / 2", "(&.height - height) / 2 - 128");
+			goBackButton->setSize(240, 48);
+			goBackButton->connect("pressed", [&]()
 			{
-				sceneManager.switchScene("MainMenu");
+				sceneManager.switchScene("Main Menu");
 			});
-			add(m_goBackButton, "GoBackButton");
+			add(goBackButton, "GoBackButton");
 		}
 
-		void CreditsScene::draw()
+		void CreditsScene::draw(sf::RenderTarget& target)
 		{
 			tgui::Gui::draw();
 		}
