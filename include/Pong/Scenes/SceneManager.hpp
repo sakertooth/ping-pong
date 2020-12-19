@@ -1,8 +1,6 @@
 #pragma once
 #include <Pong/Scenes/Scene.hpp>
 #include <unordered_map>
-#include <string>
-#include <memory>
 
 namespace Pong
 {

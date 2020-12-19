@@ -1,16 +1,20 @@
 #include <Pong/Scenes/MainMenuScene.hpp>
+#include <Pong/Scenes/SceneManager.hpp>
+#include <Pong/Game.hpp>
 
 namespace Pong
 {
 	namespace Scenes
 	{
-		MainMenuScene::MainMenuScene(SceneManager& manager, sf::RenderTarget& target) : 
-			tgui::Gui(target),
+		MainMenuScene::MainMenuScene() : 
+			tgui::Gui(Game::getInstance().getWindow()),
 			m_titleLabel(tgui::Label::create("Saker's Ping Pong")),
 			m_playButton(tgui::Button::create("Play")),
 			m_creditsButton(tgui::Button::create("Credits")),
 			m_exitButton(tgui::Button::create("Exit"))
 		{
+			auto& sceneManager = Game::getInstance().getSceneManager();
+
 			m_titleLabel->setPosition("(&.width - width) / 2", "(&.height - height) / 2 - 188");
 			m_titleLabel->getRenderer()->setTextColor(tgui::Color::White);
 			m_titleLabel->setTextSize(20);
@@ -20,7 +24,7 @@ namespace Pong
 			m_playButton->setSize(240, 48);
 			m_playButton->connect("pressed", [&]()
 			{
-				manager.switchScene("Play");
+				sceneManager.switchScene("Play");
 			});
 			add(m_playButton, "PlayButton");
 
@@ -28,7 +32,7 @@ namespace Pong
 			m_creditsButton->setSize(240, 48);
 			m_creditsButton->connect("pressed", [&]()
 			{
-				manager.switchScene("Credits");
+				sceneManager.switchScene("Credits");
 			});
 			add(m_creditsButton, "CreditsButton");
 

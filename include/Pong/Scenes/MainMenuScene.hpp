@@ -1,6 +1,5 @@
 #pragma once
 #include <Pong/Scenes/Scene.hpp>
-#include <Pong/Scenes/SceneManager.hpp>
 #include <TGUI/TGUI.hpp>
 
 namespace Pong
@@ -14,7 +13,7 @@ namespace Pong
 			tgui::Button::Ptr m_creditsButton;
 			tgui::Button::Ptr m_exitButton;
 		public:
-			MainMenuScene(SceneManager& manager, sf::RenderTarget& target);
+			MainMenuScene();
 			void draw();
 			void update(float deltaTime);
 			void handleEvent(sf::Event& event);

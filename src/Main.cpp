@@ -1,26 +1,11 @@
 #include <Pong/Game.hpp>
-
+#include <Pong/Scenes/MainMenuScene.hpp>
+#include <Pong/Scenes/CreditsScene.hpp>
+#include <Pong/Scenes/PlayScene.hpp>
 int main()
 {
-	sf::RenderWindow window{ sf::VideoMode(640, 480), "Saker's Ping Pong" };
-	Pong::Game game{ window };
-
-	sf::Clock deltaClock;
-	while (game.isRunning())
-	{
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			game.handleEvents(event);
-		}
-
-		window.clear();
-		game.draw();
-		window.display();
-
-		game.update(deltaClock.getElapsedTime().asSeconds());
-		deltaClock.restart();
-	}
-
-	window.close();
+	auto& game = Pong::Game::getInstance();
+	game.getSceneManager().addScene("Main Menu", std::make_shared<Pong::Scenes::MainMenuScene>());
+	game.getSceneManager().addScene("Play", std::make_shared<Pong::Scenes::PlayScene>());
+	game.getSceneManager().addScene("Credits", std::make_shared<Pong::Scenes::CreditsScene>());
 }

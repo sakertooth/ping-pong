@@ -1,6 +1,6 @@
 #pragma once
-#include <Pong/Scenes/SceneManager.hpp>
 #include <Pong/Scenes/Scene.hpp>
+#include <SFML/Graphics.hpp>
 
 namespace Pong
 {
@@ -8,8 +8,10 @@ namespace Pong
 	{
 		class PlayScene : public Scene
 		{
+			sf::Text m_pressSpacebarText;
+			sf::RectangleShape m_paddleOne;
+			sf::RectangleShape m_paddleTwo;
 		public:
-			PlayScene(SceneManager& manager, sf::RenderTarget& target);
 			void draw();
 			void update(float deltaTime);
 			void handleEvent(sf::Event& event);

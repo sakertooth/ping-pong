@@ -1,5 +1,5 @@
+#pragma once
 #include <Pong/Scenes/Scene.hpp>
-#include <Pong/Scenes/SceneManager.hpp>
 #include <TGUI/TGUI.hpp>
 
 namespace Pong
@@ -11,7 +11,7 @@ namespace Pong
 			tgui::Label::Ptr m_creditsLabel;
 			tgui::Button::Ptr m_goBackButton;
 		public:
-			CreditsScene(SceneManager& manager, sf::RenderTarget& target);
+			CreditsScene();
 			void draw();
 			void update(float deltaTime);
 			void handleEvent(sf::Event& event);
