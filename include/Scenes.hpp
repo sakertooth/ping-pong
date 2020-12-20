@@ -1,7 +1,6 @@
 #pragma once
 #include <TGUI/TGUI.hpp>
 #include "Scenes/Scene.hpp"
-#include "Scenes/SceneWindow.hpp"
 
 namespace Pong
 {
@@ -14,7 +13,7 @@ namespace Pong
 			tgui::Button::Ptr creditsButton;
 			tgui::Button::Ptr exitButton;
 		public:
-			MainMenuScene(SceneWindow& sceneWindow);
+			MainMenuScene();
 
 			virtual void draw(sf::RenderTarget& target) override;
 			virtual void update(float deltaTime) override;
@@ -26,7 +25,7 @@ namespace Pong
 			tgui::Label::Ptr creditsLabel;
 			tgui::Button::Ptr goBackButton;
 		public:
-			CreditsScene(SceneWindow& sceneWindow);
+			CreditsScene();
 
 			virtual void draw(sf::RenderTarget& target) override;
 			virtual void update(float deltaTime) override;
@@ -35,13 +34,12 @@ namespace Pong
 
 		class PlayScene : public Scene
 		{
-			SceneWindow& sceneWindow;
 			sf::Text pressSpacebarText;
 			sf::RectangleShape paddleOne;
 			sf::RectangleShape paddleTwo;
 			bool started;
 		public:
-			PlayScene(SceneWindow& sceneWindow);
+			PlayScene();
 
 			virtual void draw(sf::RenderTarget& target) override;
 			virtual void update(float deltaTime) override;

@@ -1,13 +1,17 @@
 #include "Scenes.hpp"
+#include "ServiceLocator.hpp"
+
+#include <iostream>
 
 namespace Pong
 {
 	namespace Scenes
 	{
-		CreditsScene::CreditsScene(SceneWindow& sceneWindow) : tgui::Gui(sceneWindow),
+		CreditsScene::CreditsScene() : tgui::Gui(*ServiceLocator::getSceneManager()),
 			creditsLabel(tgui::Label::create("Saker, @sakeronthebeat on Twitter")),
 			goBackButton(tgui::Button::create("Go Back"))
 		{
+			auto sceneManager = ServiceLocator::getSceneManager();
 			creditsLabel->getRenderer()->setTextColor(tgui::Color::White);
 			creditsLabel->setPosition("(&.size - size) / 2");
 			creditsLabel->setTextSize(16);
@@ -15,9 +19,9 @@ namespace Pong
 
 			goBackButton->setPosition("(&.width - width) / 2", "(&.height - height) / 2 - 128");
 			goBackButton->setSize(240, 48);
-			goBackButton->connect("pressed", [&]()
+			goBackButton->connect("pressed", [sceneManager]()
 			{
-				sceneWindow.switchScene("Main Menu");
+				sceneManager->switchScene("Main Menu");
 			});
 			add(goBackButton, "GoBackButton");
 		}

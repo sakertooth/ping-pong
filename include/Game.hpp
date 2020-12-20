@@ -1,7 +1,7 @@
 #pragma once
 #include "Scenes/Scene.hpp"
-#include "Scenes/SceneWindow.hpp"
-#include "Resources.hpp"
+#include "Scenes/SceneManager.hpp"
+#include "ResourceManager.hpp"
 
 namespace Pong
 {
@@ -9,13 +9,13 @@ namespace Pong
 
 	class Game
 	{
-		SceneWindow sceneWindow;
+		SceneManager sceneManager;
 		ResourceManager resourceManager;
 	public:
 		Game(const sf::VideoMode& mode, const sf::String& title);
 
 		void draw();
 		void update(float deltaTime);
-		const bool& isRunning() const;
+		const bool isRunning() const;
 	};
 }

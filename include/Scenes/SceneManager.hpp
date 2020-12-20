@@ -1,16 +1,14 @@
 #pragma once
 #include "Scenes/Scene.hpp"
-#include "FPSHud.hpp"
 #include <unordered_map>
 
 namespace Pong
 {
 	namespace Scenes
 	{
-		class SceneWindow : public sf::RenderWindow
+		class SceneManager : public sf::RenderWindow
 		{
 		private:
-			FPSHud fpsHud;
 			std::unordered_map<std::string, std::shared_ptr<Scene>> scenes;
 			std::shared_ptr<Scene> activeScene;
 		public:

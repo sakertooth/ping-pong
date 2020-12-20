@@ -1,5 +1,4 @@
 #include "Game.hpp"
-#include "Resources.hpp"
 
 int main()
 {
@@ -8,8 +7,8 @@ int main()
 	sf::Clock deltaClock;
 	while (game.isRunning())
 	{
-		game.update(deltaClock.getElapsedTime().asSeconds());
 		deltaClock.restart();
 		game.draw();
+		game.update(deltaClock.getElapsedTime().asSeconds());
 	}
 }

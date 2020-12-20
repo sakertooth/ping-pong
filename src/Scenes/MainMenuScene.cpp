@@ -1,15 +1,18 @@
 #include "Scenes.hpp"
+#include "ServiceLocator.hpp"
+#include <iostream>
 
 namespace Pong
 {
 	namespace Scenes
 	{
-		MainMenuScene::MainMenuScene(SceneWindow& sceneWindow) : tgui::Gui(sceneWindow),
+		MainMenuScene::MainMenuScene() : tgui::Gui(*ServiceLocator::getSceneManager()),
 			titleLabel(tgui::Label::create("Saker's Ping Pong")),
 			playButton(tgui::Button::create("Play")),
 			creditsButton(tgui::Button::create("Credits")),
 			exitButton(tgui::Button::create("Exit"))
 		{
+			auto sceneManager = ServiceLocator::getSceneManager();
 			titleLabel->setPosition("(&.width - width) / 2", "(&.height - height) / 2 - 188");
 			titleLabel->getRenderer()->setTextColor(tgui::Color::White);
 			titleLabel->setTextSize(20);
@@ -17,25 +20,25 @@ namespace Pong
 
 			playButton->setPosition("(&.width - width) / 2", "(&.height - height) / 2 - 128");
 			playButton->setSize(240, 48);
-			playButton->connect("pressed", [&]()
+			playButton->connect("pressed", [sceneManager]()
 			{
-				sceneWindow.switchScene("Play");
+				sceneManager->switchScene("Play");
 			});
 			add(playButton, "PlayButton");
 
 			creditsButton->setPosition("(&.width - width) / 2", "(&.height - height) / 2");
 			creditsButton->setSize(240, 48);
-			creditsButton->connect("pressed", [&]()
+			creditsButton->connect("pressed", [sceneManager]()
 			{
-				sceneWindow.switchScene("Credits");
+				sceneManager->switchScene("Credits");
 			});
 			add(creditsButton, "CreditsButton");
 
 			exitButton->setPosition("(&.width - width) / 2", "(&.height - height) / 2 + 128");
 			exitButton->setSize(240, 48);
-			exitButton->connect("pressed", [&]()
+			exitButton->connect("pressed", [sceneManager]()
 			{
-				std::exit(0);
+				sceneManager->close();
 			});
 			add(exitButton, "ExitButton");
 		}
