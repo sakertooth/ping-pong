@@ -1,68 +1,27 @@
-#include <Pong/Game.hpp>
-#include <Pong/Scenes/MainMenuScene.hpp>
-#include <Pong/Scenes/PlayScene.hpp>
-#include <Pong/Scenes/CreditsScene.hpp>
+#include "Game.hpp"
+#include "Scenes.hpp"
 
 namespace Pong
 {
-	Game::Game() : window(sf::RenderWindow(sf::VideoMode(640, 480), "Saker's Ping Pong"))
+	Game::Game(const sf::VideoMode& mode, const sf::String& title) : sceneWindow(mode, title)
 	{
-		sceneManager.addScene("Main Menu", std::make_shared<Scenes::MainMenuScene>(sceneManager, window));
-		sceneManager.addScene("Play", std::make_shared<Scenes::PlayScene>(sceneManager, window));
-		sceneManager.addScene("Credits", std::make_shared<Scenes::CreditsScene>(sceneManager, window));
+		sceneWindow.addScene("Main Menu", std::make_shared<Scenes::MainMenuScene>(sceneWindow));
+		sceneWindow.addScene("Play", std::make_shared<Scenes::PlayScene>(sceneWindow));
+		sceneWindow.addScene("Credits", std::make_shared<Scenes::CreditsScene>(sceneWindow));
 	}
 
-	void Game::run()
+	void Game::draw()
 	{
-		while (window.isOpen())
-		{
-			sf::Event event;
-			while (window.pollEvent(event))
-			{
-				if (event.type == sf::Event::Closed)
-				{
-					window.close();
-					return;
-				}
-				sceneManager.getActiveScene()->handleEvent(event);
-			}
-
-			window.clear();
-			draw(window);
-			window.display();
-
-			update(deltaClock.getElapsedTime().asSeconds());
-			deltaClock.restart();
-		}
-	}
-
-	void Game::stop()
-	{
-		window.close();
-	}
-
-	void Game::draw(sf::RenderTarget &target)
-	{
-		sceneManager.getActiveScene()->draw(target);
+		sceneWindow.draw();
 	}
 
 	void Game::update(float deltaTime)
 	{
-		sceneManager.getActiveScene()->update(deltaTime);
+		sceneWindow.update(deltaTime);
 	}
 
-	const sf::RenderWindow& Game::getWindow()
+	const bool& Game::isRunning() const
 	{
-		return window;
-	}
-
-	const Scenes::SceneManager& Game::getSceneManager()
-	{
-		return sceneManager;
-	}
-
-	const bool& Game::isRunning()
-	{
-		return window.isOpen();
+		return sceneWindow.isOpen();
 	}
 }

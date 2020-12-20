@@ -1,15 +1,13 @@
-#include <Pong/Scenes/CreditsScene.hpp>
-#include <Pong/Game.hpp>
+#include "Scenes.hpp"
 
 namespace Pong
 {
 	namespace Scenes
 	{
-		CreditsScene::CreditsScene(SceneManager& sceneManager, sf::RenderWindow &window) : 
-			tgui::Gui(window),
-			goBackButton(tgui::Button::create("Go Back")),
-			creditsLabel(tgui::Label::create("Saker, @sakeronthebeat on Twitter"))
-		{			
+		CreditsScene::CreditsScene(SceneWindow& sceneWindow) : tgui::Gui(sceneWindow),
+			creditsLabel(tgui::Label::create("Saker, @sakeronthebeat on Twitter")),
+			goBackButton(tgui::Button::create("Go Back"))
+		{
 			creditsLabel->getRenderer()->setTextColor(tgui::Color::White);
 			creditsLabel->setPosition("(&.size - size) / 2");
 			creditsLabel->setTextSize(16);
@@ -19,7 +17,7 @@ namespace Pong
 			goBackButton->setSize(240, 48);
 			goBackButton->connect("pressed", [&]()
 			{
-				sceneManager.switchScene("Main Menu");
+				sceneWindow.switchScene("Main Menu");
 			});
 			add(goBackButton, "GoBackButton");
 		}

@@ -1,4 +1,5 @@
-#include <Pong/Scenes/PlayScene.hpp>
+#include "Scenes.hpp"
+#include "Resources.hpp"
 #include <iostream>
 
 namespace Pong
@@ -7,29 +8,29 @@ namespace Pong
 	{
 		const float paddleSpeed = 500;
 
-		PlayScene::PlayScene(SceneManager& sceneManager, sf::RenderWindow& window) : 
-			tgui::Gui(window), 
-			started(false), 
-			pressSpacebarLabel(tgui::Label::create("Press spacebar to start"))
+		PlayScene::PlayScene(SceneWindow& sceneWindow) : 
+			started(false),
+			sceneWindow(sceneWindow)
 		{
-			auto yCenter = (window.getSize().y - 96) / 2;
+			auto yCenter = (sceneWindow.getSize().y - 96) / 2;
 			paddleOne.setSize(sf::Vector2f(4, 96));
+
 			paddleOne.setPosition(16, yCenter);
 
 			paddleTwo.setSize(sf::Vector2f(4, 96));
-			paddleTwo.setPosition(window.getSize().x - 16, yCenter);
+			paddleTwo.setPosition(sceneWindow.getSize().x - 16, yCenter);
 
-			pressSpacebarLabel->getRenderer()->setTextColor(tgui::Color::White);
-			pressSpacebarLabel->setPosition("(&.size - size) / 2");
-			pressSpacebarLabel->setTextSize(16);
-			add(pressSpacebarLabel, "SpacebarLabel");
+			pressSpacebarText.setFont(ResourceManager::getGameFont());
+			pressSpacebarText.setString("Press spacebar to start");
+			pressSpacebarText.setPosition((sceneWindow.getPosition().x - pressSpacebarText.getPosition().x) / 2, (sceneWindow.getPosition().y - pressSpacebarText.getPosition().y) / 2);
+			pressSpacebarText.setCharacterSize(16);
 		}
 
-		void PlayScene::draw(sf::RenderTarget &target)
+		void PlayScene::draw(sf::RenderTarget& target)
 		{
 			if (!started)
 			{
-				tgui::Gui::draw();
+				target.draw(pressSpacebarText);
 				return;
 			}
 
@@ -46,7 +47,7 @@ namespace Pong
 					paddleOne.move(0, -paddleSpeed * deltaTime);
 				}
 
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) && paddleOne.getPosition().y < getTarget()->getSize().y - paddleOne.getLocalBounds().height)
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) && paddleOne.getPosition().y < sceneWindow.getSize().y - paddleOne.getLocalBounds().height)
 				{
 					paddleOne.move(0, paddleSpeed * deltaTime);
 				}
@@ -56,15 +57,13 @@ namespace Pong
 					paddleTwo.move(0, -paddleSpeed * deltaTime);
 				}
 
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down) && paddleTwo.getPosition().y < getTarget()->getSize().y - paddleTwo.getLocalBounds().height)
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down) && paddleTwo.getPosition().y < sceneWindow.getSize().y - paddleTwo.getLocalBounds().height)
 				{
 					paddleTwo.move(0, paddleSpeed * deltaTime);
 				}
-
-				return;
 			}
 
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && !started)
 			{
 				started = true;
 			}
