@@ -6,67 +6,98 @@ namespace Pong
 {
 	namespace Scenes
 	{
-		const float paddleSpeed = 500;
-
-		PlayScene::PlayScene() : started(false)
+		PlayScene::PlayScene() : started(false), over(false),
+			paddleOne(sf::Vector2f(16, (ServiceLocator::getSceneManager()->getSize().y - 96) / 2), sf::Keyboard::W, sf::Keyboard::S),
+			paddleTwo(sf::Vector2f(ServiceLocator::getSceneManager()->getSize().x - 16, (ServiceLocator::getSceneManager()->getSize().y - 96) / 2), sf::Keyboard::Up, sf::Keyboard::Down)
 		{
 			auto sceneManager = ServiceLocator::getSceneManager();
-			auto yCenter = (sceneManager->getSize().y - 96) / 2;
-			paddleOne.setSize(sf::Vector2f(4, 96));
 
-			paddleOne.setPosition(16, yCenter);
+			ball.setRadius(3);
+			ball.setPosition(sceneManager->getSize().x / 2, sceneManager->getSize().y / 2);
 
-			paddleTwo.setSize(sf::Vector2f(4, 96));
-			paddleTwo.setPosition(sceneManager->getSize().x - 16, yCenter);
+			paddleOneScore.setFont(ServiceLocator::getResourceManager()->getGameFont());
+			paddleOneScore.setString(std::to_string(paddleOne.getPoints()));
+			paddleOneScore.setCharacterSize(48);
+			paddleOneScore.setPosition(static_cast<int>((sceneManager->getSize().x - paddleOneScore.getLocalBounds().width) / 2) - 96, 5);
 
-			pressSpacebarText.setFont(ServiceLocator::getResourceManager()->getGameFont());
-			pressSpacebarText.setString("Press spacebar to start");
-			pressSpacebarText.setPosition((sceneManager->getPosition().x - pressSpacebarText.getPosition().x) / 2, 
-				(sceneManager->getPosition().y - pressSpacebarText.getPosition().y) / 2);
-			pressSpacebarText.setCharacterSize(16);
+			paddleTwoScore.setFont(ServiceLocator::getResourceManager()->getGameFont());
+			paddleTwoScore.setString(std::to_string(paddleTwo.getPoints()));
+			paddleTwoScore.setCharacterSize(48);
+			paddleTwoScore.setPosition(static_cast<int>((sceneManager->getSize().x - paddleOneScore.getLocalBounds().width) / 2) + 96, 5);
+
+			separatorLine.setPosition(sceneManager->getSize().x / 2, 0);
+			separatorLine.setSize(sf::Vector2f(2, sceneManager->getSize().y));
+
+			noteText.setFont(ServiceLocator::getResourceManager()->getGameFont());
+			noteText.setString("Press spacebar to start");
+			noteText.setCharacterSize(24);
+			noteText.setPosition(static_cast<int>((sceneManager->getSize().x - noteText.getLocalBounds().width) / 2),
+				static_cast<int>((sceneManager->getSize().y - noteText.getLocalBounds().height) / 2));
 		}
 
 		void PlayScene::draw(sf::RenderTarget& target)
 		{
-			if (!started)
+			if (started && !over)
 			{
-				target.draw(pressSpacebarText);
-				return;
-			}
+				target.draw(paddleOne);
+				target.draw(paddleTwo);
 
-			target.draw(paddleOne);
-			target.draw(paddleTwo);
+				target.draw(paddleOneScore);
+				target.draw(paddleTwoScore);
+
+				target.draw(separatorLine);
+				target.draw(ball);
+			}
+			else if (!started || over)
+			{
+				target.draw(noteText);
+			}
 		}
 
 		void PlayScene::update(float deltaTime)
 		{
-			auto sceneManager = ServiceLocator::getSceneManager();
-			if (started)
+			if (started && !over)
 			{
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && paddleOne.getPosition().y > 0)
+				paddleOne.update(deltaTime);
+				paddleTwo.update(deltaTime);
+				ball.update(deltaTime, paddleOne, paddleTwo);
+
+				if (std::stoi(paddleOneScore.getString().toAnsiString()) != paddleOne.getPoints())
 				{
-					paddleOne.move(0, -paddleSpeed * deltaTime);
+					paddleOneScore.setString(std::to_string(paddleOne.getPoints()));
+				}
+				
+				if (std::stoi(paddleTwoScore.getString().toAnsiString()) != paddleTwo.getPoints())
+				{
+					paddleTwoScore.setString(std::to_string(paddleTwo.getPoints()));
 				}
 
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) && paddleOne.getPosition().y < sceneManager->getSize().y - paddleOne.getLocalBounds().height)
+				over = paddleOne.getPoints() == 11 || paddleTwo.getPoints() == 11;
+				if (paddleOne.getPoints() == 11)
 				{
-					paddleOne.move(0, paddleSpeed * deltaTime);
+					noteText.setString("Player One has won the game");
 				}
-
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up) && paddleTwo.getPosition().y > 0)
+				else if (paddleOne.getPoints() == 11)
 				{
-					paddleTwo.move(0, -paddleSpeed * deltaTime);
-				}
-
-				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down) && paddleTwo.getPosition().y < sceneManager->getSize().y - paddleTwo.getLocalBounds().height)
-				{
-					paddleTwo.move(0, paddleSpeed * deltaTime);
+					noteText.setString("Player Two has won the game");
 				}
 			}
-
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && !started)
+			
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))
 			{
-				started = true;
+				if (!started && !over)
+				{
+					noteText.setString("");
+					started = true;
+				}
+				else if (over)
+				{
+					if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && over)
+					{
+						auto sceneManager = ServiceLocator::getSceneManager();
+						sceneManager->switchScene("Main Menu");
+					}
+				}
 			}
 		}
 

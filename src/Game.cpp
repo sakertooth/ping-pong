@@ -4,14 +4,13 @@
 
 namespace Pong
 {
-	Game::Game(const sf::VideoMode& mode, const sf::String& title) : sceneManager(mode, title)
+	Game::Game(const sf::VideoMode& mode, const sf::String& title) : sceneManager(mode, title, sf::Style::Titlebar | sf::Style::Close)
 	{
 		ServiceLocator::provide(&sceneManager);
 		ServiceLocator::provide(&resourceManager);
 
 		sceneManager.addScene("Main Menu", std::make_shared<Scenes::MainMenuScene>());
 		sceneManager.addScene("Play", std::make_shared<Scenes::PlayScene>());
-		sceneManager.addScene("Credits", std::make_shared<Scenes::CreditsScene>());
 	}
 
 	void Game::draw()

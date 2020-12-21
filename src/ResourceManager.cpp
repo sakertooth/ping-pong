@@ -4,7 +4,7 @@ namespace Pong
 {
 	ResourceManager::ResourceManager()
 	{
-		gameFont.loadFromFile("bit5x3.ttf");
+		gameFont.loadFromFile("bit9x9.ttf");
 	}
 
 	const sf::Font& ResourceManager::getGameFont()
