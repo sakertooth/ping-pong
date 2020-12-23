@@ -1,38 +1,34 @@
 #include "Objects/Paddle.hpp"
 #include "ServiceLocator.hpp"
 
-namespace Pong
+namespace Pong::Objects
 {
-	namespace Objects
+	Paddle::Paddle(sf::Keyboard::Key upKey, sf::Keyboard::Key downKey) : points(0), upKey(upKey), downKey(downKey)
 	{
-		Paddle::Paddle(const sf::Vector2f& startingPosition, sf::Keyboard::Key upKey, sf::Keyboard::Key downKey) : upKey(upKey), downKey(downKey), points(0)
-		{
-			setPosition(startingPosition);
-			setSize(sf::Vector2f(4, 48));
-		}
+		setSize(sf::Vector2f(4, 32));
+	}
 
-		void Paddle::update(float deltaTime)
+	void Paddle::update(const sf::Time& deltaTime)
+	{
+		auto window = ServiceLocator::getRenderWindow();
+		if (sf::Keyboard::isKeyPressed(upKey) && getPosition().y > 0)
 		{
-			if (sf::Keyboard::isKeyPressed(upKey) && getPosition().y > 0)
-			{
-				move(0, -Paddle::speed * deltaTime);
-			}
-
-			auto sceneManger = ServiceLocator::getSceneManager();
-			if (sf::Keyboard::isKeyPressed(downKey) && getPosition().y < sceneManger->getSize().y - getLocalBounds().height)
-			{
-				move(0, Paddle::speed * deltaTime);
-			}
+			move(0, -speed * deltaTime.asSeconds());
 		}
-
-		const int& Paddle::incrementPoint()
+		
+		if (sf::Keyboard::isKeyPressed(downKey) && getPosition().y + getLocalBounds().height < window->getSize().y)
 		{
-			return ++points;
+			move(0, speed * deltaTime.asSeconds());
 		}
+	}
 
-		const int& Paddle::getPoints()
-		{
-			return points;
-		}
+	const int& Paddle::incrementPoint()
+	{
+		return ++points;
+	}
+
+	const int& Paddle::getPoints() const
+	{
+		return points;
 	}
 }

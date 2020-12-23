@@ -13,11 +13,11 @@ namespace Pong
 			sf::Keyboard::Key downKey;
 		public:
 			static constexpr float speed = 500;
-			Paddle(const sf::Vector2f& startingPosition, sf::Keyboard::Key upKey, sf::Keyboard::Key downKey);
+			Paddle(sf::Keyboard::Key upKey, sf::Keyboard::Key downKey);
 			
-			void update(float deltaTime);
+			void update(const sf::Time &deltaTime);
 			const int& incrementPoint();
-			const int& getPoints();
+			const int& getPoints() const;
 		};
 	}
 }

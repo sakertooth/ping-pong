@@ -2,114 +2,90 @@
 #include "ServiceLocator.hpp"
 
 #include <iostream>
-#include <iomanip>
-namespace Pong
+#include <random>
+
+namespace Pong::Objects
 {
-	namespace Objects
+	Ball::Ball() : angle(45), reset(false)
 	{
-		Ball::Ball() : speed(400), angle(45) {}
 
-		void Ball::resetPositionToCenter()
+	}
+
+	void Ball::update(const sf::Time& deltaTime, Paddle& paddleOne, Paddle& paddleTwo)
+	{
+		auto window = ServiceLocator::getRenderWindow();
+
+		if (!reset)
 		{
-			auto sceneManager = ServiceLocator::getSceneManager();
-			setPosition(sceneManager->getSize().x / 2, sceneManager->getSize().y / 2);
-			speed = 400;
-		}
+			auto ballTopY = getGlobalBounds().top;
+			auto ballBottomY = ballTopY + getGlobalBounds().height;
 
-		void Ball::update(float deltaTime, Paddle& paddleOne, Paddle& paddleTwo)
-		{
-			auto sceneManager = ServiceLocator::getSceneManager();		
-			
-			//When the ball passes through a paddle
-			if (getPosition().x > sceneManager->getSize().x)
-			{
-				resetPositionToCenter();
-				paddleOne.incrementPoint();
-				angle = 180 - angle;
-			}
-			else if (getPosition().x < 0)
-			{
-				resetPositionToCenter();
-				paddleTwo.incrementPoint();
-				angle = 180 - angle;
-			}
-
-			//When the ball intersects with the first paddle
-			auto ballLeftmostX = getGlobalBounds().left;
-			auto paddleOneRightmostX = paddleOne.getGlobalBounds().left + paddleOne.getGlobalBounds().width;
-
-			auto ballY = getGlobalBounds().top;
-			auto paddleOneTopY = paddleOne.getGlobalBounds().top;
-			auto paddleOneBottomY = paddleOne.getGlobalBounds().top + paddleOne.getGlobalBounds().height;
-
-			if (ballY <= paddleOneBottomY && ballY >= paddleOneTopY)
-			{
-				if (std::abs(ballLeftmostX - paddleOneRightmostX) <= 1.0)
-				{
-					auto paddleOneMiddleY = paddleOneTopY + (paddleOne.getGlobalBounds().height / 2);
-					if (ballY < paddleOneMiddleY || ballY > paddleOneMiddleY)
-					{
-						angle = 180 - angle;
-					}
-					else if (std::abs(ballY - paddleOneMiddleY) <= 1.0)
-					{
-						angle = 0;
-					}
-
-					if (speed <= 650)
-					{
-						speed += 50;
-					}
-				}
-			}
-
-			//When the ball intersects with the second paddle
-			auto ballRightmostX = getGlobalBounds().left + getGlobalBounds().width;
-			auto paddleTwoLeftmostX = paddleTwo.getGlobalBounds().left;
-
-			auto paddleTwoTopY = paddleTwo.getGlobalBounds().top;
-			auto paddleTwoBottomY = paddleTwo.getGlobalBounds().top + paddleTwo.getGlobalBounds().height;
-
-			if (ballY <= paddleTwoBottomY && ballY >= paddleTwoTopY)
-			{
-				if (std::abs(ballLeftmostX - paddleTwoLeftmostX) < 1.0)
-				{
-					auto paddleTwoMiddleY = paddleTwoTopY + (paddleTwo.getGlobalBounds().height / 2);
-					if (ballY <= paddleTwoMiddleY || ballY >= paddleTwoMiddleY)
-					{
-						angle = 180 - angle;
-					}
-					else if (std::abs(ballY - paddleTwoMiddleY) <= 1.0)
-					{
-						angle = 0;
-					}
-
-					if (speed <= 650)
-					{
-						speed += 50;
-					}
-				}
-			}
-
-
-			//When the ball hits the up or down part of the screen
-			if (getPosition().y < 0 || getPosition().y > sceneManager->getSize().y)
+			//Window Boundaries
+			if (ballTopY < 0 || ballBottomY > static_cast<int>(window->getSize().y))
 			{
 				angle = -angle;
 			}
 
-			move(speed * std::cos(angle * 0.0174532925) * deltaTime, speed * std::sin(angle * 0.0174532925) * deltaTime);
-		}
+			//Paddle One
+			auto ballLeftX = static_cast<int>(getGlobalBounds().left);
+			auto paddleOneRightX = static_cast<int>(paddleOne.getGlobalBounds().left + paddleOne.getGlobalBounds().width);
 
-		void Ball::setAngle(int newAngle)
+			auto paddleOneTopY = paddleOne.getGlobalBounds().top;
+			auto paddleOneBottomY = paddleOneTopY + paddleOne.getGlobalBounds().height;
+
+			if (ballBottomY < paddleOneBottomY && ballTopY > paddleOneTopY && ballLeftX == paddleOneRightX)
+			{
+				angle = 180 - angle;
+			}
+
+			//Paddle Two
+			auto ballRightX = static_cast<int>(ballLeftX + getGlobalBounds().width);
+			auto paddleTwoLeftX = static_cast<int>(paddleTwo.getGlobalBounds().left);
+
+			auto paddleTwoTopY = paddleTwo.getGlobalBounds().top;
+			auto paddleTwoBottomY = paddleTwoTopY + paddleTwo.getGlobalBounds().height;
+
+			if (ballBottomY < paddleTwoBottomY && ballTopY > paddleTwoTopY && ballRightX == paddleTwoLeftX + paddleTwo.getGlobalBounds().width)
+			{
+				angle = 180 - angle;
+			}
+
+			//If it goes beyond any of the two paddles
+			if (ballLeftX < 0)
+			{
+				paddleTwo.incrementPoint();
+				resetBall();
+			}
+			else if (ballRightX > static_cast<int>(window->getSize().x))
+			{
+				paddleOne.incrementPoint();
+				resetBall();
+			}
+
+			auto deltaTimeSeconds = deltaTime.asSeconds();
+			move(speed * std::cos(angle * 0.0174532925f) * deltaTimeSeconds, speed * std::sin(angle * 0.0174532925f) * deltaTimeSeconds);
+		}
+		else
 		{
-			angle = newAngle;
+			if (cooldown.getElapsedTime().asSeconds() >= 3)
+			{
+				setPosition(window->getSize().x / 2, window->getSize().y / 2);
+				setFillColor(sf::Color::White);
+				reset = false;
+			}
 		}
+	}
 
-		float Ball::getAngle()
-		{
-			return angle;
-		}
+	void Ball::resetBall()
+	{
+		auto window = ServiceLocator::getRenderWindow();
 
+		std::random_device rd;
+		std::mt19937 rng(rd());
+		std::uniform_int_distribution<int> uni(0, window->getSize().y);
+		setFillColor(sf::Color::Black);
+		setPosition(window->getSize().x / 2, uni(rng));
+		cooldown.restart();
+		reset = true;
 	}
 }

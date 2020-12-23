@@ -1,30 +1,27 @@
 #include "Game.hpp"
-#include "Scenes.hpp"
 #include "ServiceLocator.hpp"
+#include "Scenes/MainMenuScene.hpp"
 
 namespace Pong
 {
-	Game::Game(const sf::VideoMode& mode, const sf::String& title) : sceneManager(mode, title, sf::Style::Titlebar | sf::Style::Close)
+	Game::Game()
 	{
-		ServiceLocator::provide(&sceneManager);
-		ServiceLocator::provide(&resourceManager);
-
-		sceneManager.addScene("Main Menu", std::make_shared<Scenes::MainMenuScene>());
-		sceneManager.addScene("Play", std::make_shared<Scenes::PlayScene>());
+		ServiceLocator::provide(&gameFont);
+		gameFont.loadFromFile("pong.ttf");
 	}
 
-	void Game::draw()
+	void Game::draw(sf::RenderTarget &target)
 	{
-		sceneManager.draw();
+		sceneManager.getActiveScene()->draw(target);
 	}
 
-	void Game::update(float deltaTime)
+	void Game::update(const sf::Time& deltaTime)
 	{
-		sceneManager.update(deltaTime);
+		sceneManager.getActiveScene()->update(deltaTime);
 	}
 
-	const bool Game::isRunning() const
+	void Game::handleEvent(const sf::Event& event)
 	{
-		return sceneManager.isOpen();
+		sceneManager.getActiveScene()->handleEvent(event);
 	}
 }

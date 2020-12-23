@@ -2,23 +2,17 @@
 #include "Scenes/Scene.hpp"
 #include <unordered_map>
 
-namespace Pong
+namespace Pong::Scenes
 {
-	namespace Scenes
+	class SceneManager
 	{
-		class SceneManager : public sf::RenderWindow
-		{
-		private:
-			std::unordered_map<std::string, std::shared_ptr<Scene>> scenes;
-			std::shared_ptr<Scene> activeScene;
-		public:
-			using sf::RenderWindow::RenderWindow;
+		std::unordered_map<int, std::shared_ptr<Scene>> scenes;
+		std::shared_ptr<Scene> activeScene;
+	public:
+		SceneManager();
 
-			void draw();
-			void update(float deltaTime);
-
-			void addScene(const std::string &id, const std::shared_ptr<Scene>& scene);
-			void switchScene(const std::string& id);
-		};
-	}
+		void addScene(int id, std::shared_ptr<Scene> scene);
+		void switchActiveScene(int id);
+		std::shared_ptr<Scene> getActiveScene() const;
+	};
 }

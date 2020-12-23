@@ -1,18 +1,15 @@
+#pragma once
 #include "ServiceLocator.hpp"
 
 namespace Pong
 {
-	Scenes::SceneManager* ServiceLocator::sceneManager = NULL;
-	ResourceManager* ServiceLocator::resourceManager = NULL;
+	Scenes::SceneManager* ServiceLocator::sceneManager = nullptr;
+	sf::RenderWindow* ServiceLocator::renderWindow = nullptr;
+	sf::Font* ServiceLocator::gameFont = nullptr;
 
 	void ServiceLocator::provide(Scenes::SceneManager* sceneManager)
 	{
 		ServiceLocator::sceneManager = sceneManager;
-	}
-
-	void ServiceLocator::provide(ResourceManager* resourceManager)
-	{
-		ServiceLocator::resourceManager = resourceManager;
 	}
 
 	Scenes::SceneManager* ServiceLocator::getSceneManager()
@@ -20,8 +17,23 @@ namespace Pong
 		return sceneManager;
 	}
 
-	ResourceManager* ServiceLocator::getResourceManager()
+	void ServiceLocator::provide(sf::RenderWindow* renderWindow)
 	{
-		return resourceManager;
+		ServiceLocator::renderWindow = renderWindow;
+	}
+
+	sf::RenderWindow* ServiceLocator::getRenderWindow()
+	{
+		return renderWindow;
+	}
+
+	void ServiceLocator::provide(sf::Font* gameFont)
+	{
+		ServiceLocator::gameFont = gameFont;
+	}
+
+	sf::Font* ServiceLocator::getGameFont()
+	{
+		return gameFont;
 	}
 }

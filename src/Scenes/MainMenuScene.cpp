@@ -1,51 +1,51 @@
-#include "Scenes.hpp"
+#include "Scenes/MainMenuScene.hpp"
 #include "ServiceLocator.hpp"
-#include <iostream>
 
-namespace Pong
+namespace Pong::Scenes
 {
-	namespace Scenes
+	MainMenuScene::MainMenuScene() : 
+		tgui::Gui(*ServiceLocator::getRenderWindow()),
+		titleLabel(tgui::Label::create()),
+		onePlayerButton(tgui::Button::create("One Player")),
+		twoPlayerButton(tgui::Button::create("Two Player")),
+		exitButton(tgui::Button::create("Exit"))
 	{
-		MainMenuScene::MainMenuScene() : tgui::Gui(*ServiceLocator::getSceneManager()),
-			titleLabel(tgui::Label::create("Ping Pong")),
-			playButton(tgui::Button::create("Play")),
-			exitButton(tgui::Button::create("Exit"))
+		auto loadButton = [&](tgui::Button::Ptr button, tgui::Layout x, tgui::Layout y)
 		{
-			auto sceneManager = ServiceLocator::getSceneManager();
-			titleLabel->setPosition("(&.width - width) / 2", "(&.height - height) / 2 - 148");
-			titleLabel->getRenderer()->setTextColor(tgui::Color::White);
-			titleLabel->getRenderer()->setFont(ServiceLocator::getResourceManager()->getGameFont());
-			titleLabel->setTextSize(70);
-			add(titleLabel, "TitleLabel");
+			button->setSize(240, 45);
+			button->setTextSize(30);
+			button->setPosition(x, y);
+			button->getRenderer()->setFont("pong.ttf");
+			button->getRenderer()->setBackgroundColor(tgui::Color::Black);
+			button->getRenderer()->setTextColor(tgui::Color::White);
+			button->getRenderer()->setBorderColor(tgui::Color::Transparent);
+			button->getRenderer()->setBorderColorFocused(tgui::Color::Transparent);
+			add(button);
+		};
 
-			playButton->setPosition("(&.width - width) / 2", "(&.height - height) / 2 - 64");
-			playButton->getRenderer()->setFont(ServiceLocator::getResourceManager()->getGameFont());
-			playButton->setSize(240, 48);
-			playButton->connect("pressed", [sceneManager]()
-			{
-				sceneManager->switchScene("Play");
-			});
-			add(playButton, "PlayButton");
+		titleLabel->setText("Ping Pong");
+		titleLabel->setPosition("(&.width - width) / 2", "(&.height - height) / 2 - 128");
+		titleLabel->getRenderer()->setFont("pong.ttf");
+		titleLabel->getRenderer()->setTextColor(tgui::Color::White);
+		titleLabel->setTextSize(45);
+		add(titleLabel);
 
-			exitButton->setPosition("(&.width - width) / 2", "(&.height - height) / 2");
-			exitButton->setSize(240, 48);
-			exitButton->connect("pressed", [sceneManager]()
-			{
-				sceneManager->close();
-			});
-			add(exitButton, "ExitButton");
-		}
+		loadButton(onePlayerButton, "(&.width - width) / 2", "(&.height - height) / 2 - 32");
+		loadButton(twoPlayerButton, "(&.width - width) / 2", "(&.height - height) / 2 + 32");
+		loadButton(exitButton, "(&.width - width) / 2", "(&.height - height) / 2 + 128");
 
-		void MainMenuScene::draw(sf::RenderTarget& target)
-		{
-			tgui::Gui::draw();
-		}
+		onePlayerButton->connect("pressed", []() { ServiceLocator::getSceneManager()->switchActiveScene(1); });
+		twoPlayerButton->connect("pressed", []() { ServiceLocator::getSceneManager()->switchActiveScene(2); });
+		exitButton->connect("pressed", []() { ServiceLocator::getRenderWindow()->close(); });
+	}
 
-		void MainMenuScene::handleEvent(sf::Event& event)
-		{
-			tgui::Gui::handleEvent(event);
-		}
+	void MainMenuScene::draw(sf::RenderTarget& target)
+	{
+		tgui::Gui::draw();
+	}
 
-		void MainMenuScene::update(float deltaTime) {}
+	void MainMenuScene::handleEvent(const sf::Event& event) 
+	{
+		tgui::Gui::handleEvent(event);
 	}
 }

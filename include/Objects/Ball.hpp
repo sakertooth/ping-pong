@@ -2,25 +2,18 @@
 #include <SFML/Graphics.hpp>
 #include "Objects/Paddle.hpp"
 
-namespace Pong
+namespace Pong::Objects
 {
-	namespace Objects
+	class Ball : public sf::CircleShape
 	{
-		class Ball : public sf::CircleShape
-		{
-		private:
-			int angle;
+		int angle;
+		bool reset;
+		sf::Clock cooldown;
+	public:
+		Ball();
 
-			void resetPositionToCenter();
-		public:
-			float speed;
-			Ball();
-
-			void update(float deltaTime, Paddle& paddleOne, Paddle& paddleTwo);
-			void setAngle(int newAngle);
-
-			float getSpeed();
-			float getAngle();
-		};
-	}
+		static constexpr int speed = 510;
+		void update(const sf::Time& deltaTime, Paddle& paddleOne, Paddle& paddleTwo);
+		void resetBall();
+	};
 }

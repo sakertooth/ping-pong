@@ -1,57 +1,34 @@
 #include "Scenes/SceneManager.hpp"
+#include "Scenes/MainMenuScene.hpp"
+#include "Scenes/TwoPlayerScene.hpp"
+#include "ServiceLocator.hpp"
 
-#include <iostream>
-namespace Pong
+namespace Pong::Scenes
 {
-	namespace Scenes
+	SceneManager::SceneManager()
 	{
-		void SceneManager::draw()
-		{
-			if (activeScene != nullptr)
-			{
-				clear();
-				activeScene->draw(*this);
-				display();
-			}
-		}
+		ServiceLocator::provide(this);
+		addScene(0, std::make_shared<Scenes::MainMenuScene>());
+		addScene(2, std::make_shared<Scenes::TwoPlayerScene>());
+		switchActiveScene(0);
+	}
 
-		void SceneManager::update(float deltaTime)
+	void SceneManager::addScene(int id, std::shared_ptr<Scene> scene)
+	{
+		if (scene == nullptr)
 		{
-			if (activeScene != nullptr)
-			{
-				sf::Event event;
-				while (pollEvent(event))
-				{
-					switch (event.type)
-					{
-					case sf::Event::Closed:
-						close();
-						break;
-					default:
-						break;
-					}
-					activeScene->handleEvent(event);
-				}
-				activeScene->update(deltaTime);
-			}
+			return;
 		}
+		scenes[id] = scene;
+	}
 
-		void SceneManager::addScene(const std::string& id, const std::shared_ptr<Scene>& scene)
-		{
-			if (scene != nullptr)
-			{
-				if (scenes.empty())
-				{
-					activeScene = scene;
-				}
-				scenes[id] = scene;
-			}
+	void SceneManager::switchActiveScene(int id)
+	{
+		activeScene = scenes[id];
+	}
 
-		}
-
-		void SceneManager::switchScene(const std::string& id)
-		{
-			activeScene = scenes.at(id);
-		}
+	std::shared_ptr<Scene> SceneManager::getActiveScene() const
+	{
+		return activeScene;
 	}
 }
