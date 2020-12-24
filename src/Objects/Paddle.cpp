@@ -5,7 +5,7 @@ namespace Pong::Objects
 {
 	Paddle::Paddle(sf::Keyboard::Key upKey, sf::Keyboard::Key downKey) : points(0), upKey(upKey), downKey(downKey)
 	{
-		setSize(sf::Vector2f(4, 32));
+		setSize(sf::Vector2f(4, 52));
 	}
 
 	void Paddle::update(const sf::Time& deltaTime)

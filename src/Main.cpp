@@ -5,7 +5,7 @@
 
 int main()
 {
-	auto window = sf::RenderWindow(sf::VideoMode(640, 480), "Ping Pong");
+	auto window = sf::RenderWindow(sf::VideoMode(640, 480), "Ping Pong", sf::Style::Titlebar | sf::Style::Close);
 	Pong::ServiceLocator::provide(&window);
 
 	auto game = Pong::Game();

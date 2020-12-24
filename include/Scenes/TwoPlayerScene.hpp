@@ -9,10 +9,10 @@ namespace Pong::Scenes
 	class TwoPlayerScene : public Scene, public tgui::Gui
 	{
 		tgui::Label::Ptr noteLabel;
-		tgui::Label::Ptr playerOneScore;
-		tgui::Label::Ptr playerTwoScore;
-		Objects::Paddle playerOne;
-		Objects::Paddle playerTwo;
+		tgui::Label::Ptr leftPaddleScore;
+		tgui::Label::Ptr rightPaddleScore;
+		Objects::Paddle leftPaddle;
+		Objects::Paddle rightPaddle;
 		Objects::Ball ball;
 		bool started;
 		bool over;

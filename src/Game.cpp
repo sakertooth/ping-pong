@@ -4,12 +4,6 @@
 
 namespace Pong
 {
-	Game::Game()
-	{
-		ServiceLocator::provide(&gameFont);
-		gameFont.loadFromFile("pong.ttf");
-	}
-
 	void Game::draw(sf::RenderTarget &target)
 	{
 		sceneManager.getActiveScene()->draw(target);

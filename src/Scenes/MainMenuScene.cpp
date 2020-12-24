@@ -1,4 +1,5 @@
 #include "Scenes/MainMenuScene.hpp"
+#include "Scenes/TwoPlayerScene.hpp"
 #include "ServiceLocator.hpp"
 
 namespace Pong::Scenes
@@ -6,8 +7,7 @@ namespace Pong::Scenes
 	MainMenuScene::MainMenuScene() : 
 		tgui::Gui(*ServiceLocator::getRenderWindow()),
 		titleLabel(tgui::Label::create()),
-		onePlayerButton(tgui::Button::create("One Player")),
-		twoPlayerButton(tgui::Button::create("Two Player")),
+		playButton(tgui::Button::create("Play")),
 		exitButton(tgui::Button::create("Exit"))
 	{
 		auto loadButton = [&](tgui::Button::Ptr button, tgui::Layout x, tgui::Layout y)
@@ -30,12 +30,17 @@ namespace Pong::Scenes
 		titleLabel->setTextSize(45);
 		add(titleLabel);
 
-		loadButton(onePlayerButton, "(&.width - width) / 2", "(&.height - height) / 2 - 32");
-		loadButton(twoPlayerButton, "(&.width - width) / 2", "(&.height - height) / 2 + 32");
-		loadButton(exitButton, "(&.width - width) / 2", "(&.height - height) / 2 + 128");
+		loadButton(playButton, "(&.width - width) / 2", "(&.height - height) / 2 - 32");
+		loadButton(exitButton, "(&.width - width) / 2", "(&.height - height) / 2 + 32");
 
-		onePlayerButton->connect("pressed", []() { ServiceLocator::getSceneManager()->switchActiveScene(1); });
-		twoPlayerButton->connect("pressed", []() { ServiceLocator::getSceneManager()->switchActiveScene(2); });
+		auto sceneManager = ServiceLocator::getSceneManager();
+
+		playButton->connect("pressed", [=]() 
+		{
+			sceneManager->addScene(1, std::make_shared<Scenes::TwoPlayerScene>());
+			sceneManager->switchActiveScene(1);
+		});
+
 		exitButton->connect("pressed", []() { ServiceLocator::getRenderWindow()->close(); });
 	}
 

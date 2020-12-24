@@ -6,86 +6,69 @@
 
 namespace Pong::Objects
 {
-	Ball::Ball() : angle(45), reset(false)
-	{
-
-	}
-
-	void Ball::update(const sf::Time& deltaTime, Paddle& paddleOne, Paddle& paddleTwo)
-	{
-		auto window = ServiceLocator::getRenderWindow();
-
-		if (!reset)
-		{
-			auto ballTopY = getGlobalBounds().top;
-			auto ballBottomY = ballTopY + getGlobalBounds().height;
-
-			//Window Boundaries
-			if (ballTopY < 0 || ballBottomY > static_cast<int>(window->getSize().y))
-			{
-				angle = -angle;
-			}
-
-			//Paddle One
-			auto ballLeftX = static_cast<int>(getGlobalBounds().left);
-			auto paddleOneRightX = static_cast<int>(paddleOne.getGlobalBounds().left + paddleOne.getGlobalBounds().width);
-
-			auto paddleOneTopY = paddleOne.getGlobalBounds().top;
-			auto paddleOneBottomY = paddleOneTopY + paddleOne.getGlobalBounds().height;
-
-			if (ballBottomY < paddleOneBottomY && ballTopY > paddleOneTopY && ballLeftX == paddleOneRightX)
-			{
-				angle = 180 - angle;
-			}
-
-			//Paddle Two
-			auto ballRightX = static_cast<int>(ballLeftX + getGlobalBounds().width);
-			auto paddleTwoLeftX = static_cast<int>(paddleTwo.getGlobalBounds().left);
-
-			auto paddleTwoTopY = paddleTwo.getGlobalBounds().top;
-			auto paddleTwoBottomY = paddleTwoTopY + paddleTwo.getGlobalBounds().height;
-
-			if (ballBottomY < paddleTwoBottomY && ballTopY > paddleTwoTopY && ballRightX == paddleTwoLeftX + paddleTwo.getGlobalBounds().width)
-			{
-				angle = 180 - angle;
-			}
-
-			//If it goes beyond any of the two paddles
-			if (ballLeftX < 0)
-			{
-				paddleTwo.incrementPoint();
-				resetBall();
-			}
-			else if (ballRightX > static_cast<int>(window->getSize().x))
-			{
-				paddleOne.incrementPoint();
-				resetBall();
-			}
-
-			auto deltaTimeSeconds = deltaTime.asSeconds();
-			move(speed * std::cos(angle * 0.0174532925f) * deltaTimeSeconds, speed * std::sin(angle * 0.0174532925f) * deltaTimeSeconds);
-		}
-		else
-		{
-			if (cooldown.getElapsedTime().asSeconds() >= 3)
-			{
-				setPosition(window->getSize().x / 2, window->getSize().y / 2);
-				setFillColor(sf::Color::White);
-				reset = false;
-			}
-		}
-	}
-
-	void Ball::resetBall()
-	{
+	Ball::Ball() : angle(45), speed(440) {
 		auto window = ServiceLocator::getRenderWindow();
 
 		std::random_device rd;
-		std::mt19937 rng(rd());
-		std::uniform_int_distribution<int> uni(0, window->getSize().y);
-		setFillColor(sf::Color::Black);
-		setPosition(window->getSize().x / 2, uni(rng));
-		cooldown.restart();
-		reset = true;
+		std::default_random_engine e1(rd());
+		std::uniform_int_distribution<int> uniform_dist(0, window->getSize().x);
+		setPosition(uniform_dist(e1), 1);
+	}
+
+	void Ball::update(const sf::Time& deltaTime, Paddle& leftPaddle, Paddle& rightPaddle)
+	{
+		auto window = ServiceLocator::getRenderWindow();
+		auto windowX = static_cast<int>(window->getSize().x);
+		auto windowY = static_cast<int>(window->getSize().y);
+
+		auto ballLeft = static_cast<int>(getGlobalBounds().left);
+		auto ballRight = static_cast<int>(ballLeft + getGlobalBounds().width);
+		auto ballTop = static_cast<int>(getGlobalBounds().top);
+		auto ballBottom = static_cast<int>(ballTop + getGlobalBounds().height);
+
+		auto leftPaddleLeft = static_cast<int>(leftPaddle.getGlobalBounds().left);
+		auto leftPaddleRight = static_cast<int>(leftPaddleLeft + leftPaddle.getGlobalBounds().width);
+		auto leftPaddleTop = static_cast<int>(leftPaddle.getGlobalBounds().top);
+		auto leftPaddleBottom = static_cast<int>(leftPaddleTop + leftPaddle.getGlobalBounds().height);
+
+		auto rightPaddleLeft = static_cast<int>(rightPaddle.getGlobalBounds().left);
+		auto rightPaddleRight = static_cast<int>(rightPaddleLeft + rightPaddle.getGlobalBounds().width);
+		auto rightPaddleTop = static_cast<int>(rightPaddle.getGlobalBounds().top);
+		auto rightPaddleBottom = static_cast<int>(rightPaddleTop + rightPaddle.getGlobalBounds().height);
+
+		if (ballTop < 0 || ballBottom > windowY)
+		{
+			angle = 360 - angle;
+		}
+
+		if (ballLeft < 0)
+		{
+			rightPaddle.incrementPoint();
+			setPosition(rightPaddle.getPosition().x - 16, rightPaddleBottom - (rightPaddle.getGlobalBounds().height / 2));
+			angle = 180;
+			speed = 440;
+		}
+		else if (ballRight > windowX)
+		{
+			leftPaddle.incrementPoint();
+			setPosition(leftPaddle.getPosition().x + 16, leftPaddleBottom - (leftPaddle.getGlobalBounds().height / 2));
+			angle = 0;
+			speed = 440;
+		}
+
+		if ((ballBottom <= rightPaddleBottom && ballTop >= rightPaddleTop && ballRight == rightPaddleLeft) ||
+			(ballBottom <= leftPaddleBottom && ballTop >= leftPaddleTop && ballLeft == leftPaddleRight))
+		{
+			std::random_device rd;
+			std::default_random_engine e1(rd());
+			std::uniform_int_distribution<int> uniform_dist(0, 45);
+			
+			auto angleVariability = uniform_dist(e1);
+			angle = (angle + angleVariability + 90) % 360;
+			speed += 2;
+		}
+
+		auto deltaTimeSeconds = deltaTime.asSeconds();
+		move(speed * std::cos(angle * 0.0174532925f) * deltaTimeSeconds, speed * std::sin(angle * 0.0174532925f) * deltaTimeSeconds);
 	}
 }

@@ -9,7 +9,6 @@ namespace Pong::Scenes
 	{
 		ServiceLocator::provide(this);
 		addScene(0, std::make_shared<Scenes::MainMenuScene>());
-		addScene(2, std::make_shared<Scenes::TwoPlayerScene>());
 		switchActiveScene(0);
 	}
 

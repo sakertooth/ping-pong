@@ -9,9 +9,9 @@ add_executable(main
 					"src/ServiceLocator.cpp"
 					"src/Scenes/SceneManager.cpp" 
 					"src/Scenes/MainMenuScene.cpp" 
-					"src/Scenes/TwoPlayerScene.cpp" 
+					"src/Scenes/PlayScene.cpp" 
 					"src/Objects/Ball.cpp" 
-					"src/Objects/Paddle.cpp")
+					"src/Objects/Paddle.cpp" "include/Scenes/PlayScene.hpp")
 target_include_directories(main PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 find_package(SFML COMPONENTS main graphics audio REQUIRED)

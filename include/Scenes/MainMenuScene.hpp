@@ -7,8 +7,7 @@ namespace Pong::Scenes
 	class MainMenuScene : public Scene, public tgui::Gui
 	{
 		tgui::Label::Ptr titleLabel;
-		tgui::Button::Ptr onePlayerButton;
-		tgui::Button::Ptr twoPlayerButton;
+		tgui::Button::Ptr playButton;
 		tgui::Button::Ptr exitButton;
 	public:
 		MainMenuScene();
