@@ -1,7 +1,8 @@
-# ping-pong
+# Ping Pong
 Ping Pong using SFML + TGUI
 
 # Requirements
+C++17
 CMake 3.8>=
 
 # Roadmap
