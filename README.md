@@ -2,8 +2,8 @@
 Ping Pong using SFML + TGUI
 
 # Requirements
-C++17
-CMake 3.8>=
+* C++17
+* CMake 3.8>=
 
 # Roadmap
 * Add sounds
