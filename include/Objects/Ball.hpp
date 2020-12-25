@@ -10,7 +10,6 @@ namespace Pong::Objects
 		int speed;
 	public:
 		Ball();
-
-		void update(const sf::Time& deltaTime, Paddle& paddleOne, Paddle& paddleTwo);
+		void update(const float deltaTime, Paddle& leftPaddle, Paddle& rightPaddle);
 	};
 }

@@ -1,11 +1,10 @@
-#include "Scenes/MainMenuScene.hpp"
-#include "Scenes/TwoPlayerScene.hpp"
-#include "ServiceLocator.hpp"
+#include "States/MainMenuState.hpp"
+#include "States/TwoPlayerState.hpp"
+#include "Game.hpp"
 
-namespace Pong::Scenes
+namespace Pong::States
 {
-	MainMenuScene::MainMenuScene() : 
-		tgui::Gui(*ServiceLocator::getRenderWindow()),
+	MainMenuState::MainMenuState() : tgui::Gui(Game::getInstance().getWindow()),
 		titleLabel(tgui::Label::create()),
 		playButton(tgui::Button::create("Play")),
 		exitButton(tgui::Button::create("Exit"))
@@ -33,24 +32,30 @@ namespace Pong::Scenes
 		loadButton(playButton, "(&.width - width) / 2", "(&.height - height) / 2 - 32");
 		loadButton(exitButton, "(&.width - width) / 2", "(&.height - height) / 2 + 32");
 
-		auto sceneManager = ServiceLocator::getSceneManager();
-
-		playButton->connect("pressed", [=]() 
+		playButton->connect("pressed", []()
 		{
-			sceneManager->addScene(1, std::make_shared<Scenes::TwoPlayerScene>());
-			sceneManager->switchActiveScene(1);
+			Game::getInstance().swtichState(std::make_shared<States::TwoPlayerState>());
 		});
 
-		exitButton->connect("pressed", []() { ServiceLocator::getRenderWindow()->close(); });
+		exitButton->connect("pressed", []() { Game::getInstance().stop(); });
 	}
 
-	void MainMenuScene::draw(sf::RenderTarget& target)
+	void MainMenuState::draw(sf::RenderTarget& target)
 	{
 		tgui::Gui::draw();
 	}
 
-	void MainMenuScene::handleEvent(const sf::Event& event) 
+	void MainMenuState::update(const float deltaTime) {}
+
+	void MainMenuState::handleEvent(const sf::Event& event)
 	{
 		tgui::Gui::handleEvent(event);
+
+		switch (event.type)
+		{
+		case sf::Event::Resized:
+			tgui::Gui::setView(Game::getInstance().getWindow().getView());
+			break;
+		}
 	}
 }

@@ -1,30 +1,30 @@
+#include "Game.hpp"
 #include "Objects/Paddle.hpp"
-#include "ServiceLocator.hpp"
 
 namespace Pong::Objects
 {
 	Paddle::Paddle(sf::Keyboard::Key upKey, sf::Keyboard::Key downKey) : points(0), upKey(upKey), downKey(downKey)
 	{
-		setSize(sf::Vector2f(4, 52));
+		setSize(sf::Vector2f(1, 64));
 	}
 
-	void Paddle::update(const sf::Time& deltaTime)
+	void Paddle::update(const float deltaTime)
 	{
-		auto window = ServiceLocator::getRenderWindow();
 		if (sf::Keyboard::isKeyPressed(upKey) && getPosition().y > 0)
 		{
-			move(0, -speed * deltaTime.asSeconds());
+			move(0, -speed * deltaTime);
 		}
 		
-		if (sf::Keyboard::isKeyPressed(downKey) && getPosition().y + getLocalBounds().height < window->getSize().y)
+		const auto& view = Game::getInstance().getWindow().getView();
+		if (sf::Keyboard::isKeyPressed(downKey) && getPosition().y + getLocalBounds().height < view.getSize().y)
 		{
-			move(0, speed * deltaTime.asSeconds());
+			move(0, speed * deltaTime);
 		}
 	}
 
-	const int& Paddle::incrementPoint()
+	void Paddle::incrementPoint()
 	{
-		return ++points;
+		++points;
 	}
 
 	const int& Paddle::getPoints() const

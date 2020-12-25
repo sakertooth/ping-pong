@@ -1,40 +1,18 @@
 #include "Game.hpp"
-#include "ServiceLocator.hpp"
-
 #include <iostream>
 
 int main()
 {
-	auto window = sf::RenderWindow(sf::VideoMode(640, 480), "Ping Pong", sf::Style::Titlebar | sf::Style::Close);
-	Pong::ServiceLocator::provide(&window);
-
-	auto game = Pong::Game();
-
-	sf::Image icon;
-	icon.loadFromFile("icon.png");
-
-	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+	auto& game = Pong::Game::getInstance();
+	game.init();
 
 	sf::Clock deltaClock;
-	while (window.isOpen())
+	while (game.isRunning())
 	{
-		sf::Event event;
-		while (window.pollEvent(event))
-		{
-			switch (event.type)
-			{
-			case sf::Event::Closed:
-				window.close();
-				break;
-			}
-			game.handleEvent(event);
-		}
+		game.handleEvent();
+		game.draw();
+		game.update(deltaClock.getElapsedTime().asSeconds());
 
-		window.clear();
-		game.draw(window);
-		window.display();
-
-		game.update(deltaClock.getElapsedTime());
 		deltaClock.restart();
 	}
 }

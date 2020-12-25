@@ -1,10 +1,10 @@
-#include "Scenes/TwoPlayerScene.hpp"
-#include "ServiceLocator.hpp"
+#include "Game.hpp"
+#include "States/MainMenuState.hpp"
+#include "States/TwoPlayerState.hpp"
 
-namespace Pong::Scenes
+namespace Pong::States
 {
-	TwoPlayerScene::TwoPlayerScene() :
-		tgui::Gui(*ServiceLocator::getRenderWindow()),
+	TwoPlayerState::TwoPlayerState() : tgui::Gui(Game::getInstance().getWindow()),
 		noteLabel(tgui::Label::create()),
 		leftPaddleScore(tgui::Label::create()),
 		rightPaddleScore(tgui::Label::create()),
@@ -13,11 +13,11 @@ namespace Pong::Scenes
 		started(false),
 		over(false)
 	{
-		auto window = ServiceLocator::getRenderWindow();
-		auto yCenter = (window->getSize().y - leftPaddle.getSize().y) / 2;
+		const auto& view = Game::getInstance().getWindow().getView();
+		const auto yCenter = (view.getSize().y - leftPaddle.getSize().y) / 2;
 
 		leftPaddle.setPosition(16, yCenter);
-		leftPaddleScore->setPosition(window->getSize().x / 2 - 128, 0);
+		leftPaddleScore->setPosition(view.getSize().x / 2 - 128, 0);
 		leftPaddleScore->setTextSize(50);
 		leftPaddleScore->setText("0");
 		leftPaddleScore->getRenderer()->setFont("pong.ttf");
@@ -25,8 +25,8 @@ namespace Pong::Scenes
 		leftPaddleScore->setVisible(false);
 		add(leftPaddleScore);
 
-		rightPaddle.setPosition(static_cast<float>(window->getSize().x) - 16, yCenter);
-		rightPaddleScore->setPosition(window->getSize().x / 2 + 128, 0);
+		rightPaddle.setPosition(static_cast<float>(view.getSize().x) - 16, yCenter);
+		rightPaddleScore->setPosition(view.getSize().x / 2 + 128, 0);
 		rightPaddleScore->setTextSize(50);
 		rightPaddleScore->setText("0");
 		rightPaddleScore->getRenderer()->setFont("pong.ttf");
@@ -35,7 +35,7 @@ namespace Pong::Scenes
 		add(rightPaddleScore);
 
 		ball.setRadius(4);
-		ball.setPosition(window->getSize().x / 2, 16);
+		ball.setPosition(view.getSize().x / 2, 16);
 
 		noteLabel->setText("Press spacebar to start\n			First to 11 wins");
 		noteLabel->setTextSize(30);
@@ -45,11 +45,10 @@ namespace Pong::Scenes
 		add(noteLabel);
 	}
 
-	void TwoPlayerScene::draw(sf::RenderTarget& target)
+	void TwoPlayerState::draw(sf::RenderTarget& target)
 	{
 		tgui::Gui::draw();
-
-		if (started)
+		if (started && !over)
 		{
 			target.draw(leftPaddle);
 			target.draw(rightPaddle);
@@ -57,19 +56,19 @@ namespace Pong::Scenes
 		}
 	}
 
-	void TwoPlayerScene::update(const sf::Time& deltaTime)
+	void TwoPlayerState::update(const float deltaTime)
 	{
 		if (started && !over)
 		{
 			leftPaddle.update(deltaTime);
 			rightPaddle.update(deltaTime);
 			ball.update(deltaTime, leftPaddle, rightPaddle);
-
 			updateScoreboard();
 		}
 	}
 
-	void TwoPlayerScene::handleEvent(const sf::Event& event)
+
+	void TwoPlayerState::handleEvent(const sf::Event& event)
 	{
 		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::Space)
 		{
@@ -82,13 +81,12 @@ namespace Pong::Scenes
 			}
 			else if (over)
 			{
-				auto sceneManager = ServiceLocator::getSceneManager();
-				sceneManager->switchActiveScene(0);
+				Game::getInstance().swtichState(std::make_shared<States::MainMenuState>());
 			}
 		}
 	}
 
-	void TwoPlayerScene::updateScoreboard()
+	void TwoPlayerState::updateScoreboard()
 	{
 		auto leftPaddleScoreboard = std::stoi(leftPaddleScore->getText().toAnsiString());
 		auto rightPaddleScoreboard = std::stoi(rightPaddleScore->getText().toAnsiString());

@@ -1,12 +1,12 @@
-#pragma once
-#include "Scene.hpp"
+ #pragma once
+#include "State.hpp"
 #include "Objects/Paddle.hpp"
 #include "Objects/Ball.hpp"
 #include <TGUI/TGUI.hpp>
 
-namespace Pong::Scenes
+namespace Pong::States
 {
-	class TwoPlayerScene : public Scene, public tgui::Gui
+	class TwoPlayerState : public State, public tgui::Gui
 	{
 		tgui::Label::Ptr noteLabel;
 		tgui::Label::Ptr leftPaddleScore;
@@ -17,11 +17,12 @@ namespace Pong::Scenes
 		bool started;
 		bool over;
 	public:
-		TwoPlayerScene();
+		TwoPlayerState();
 
-		virtual void draw(sf::RenderTarget& target) override;
-		virtual void update(const sf::Time& deltaTime) override;
-		virtual void handleEvent(const sf::Event& event) override;
+		void draw(sf::RenderTarget& target) override;
+		void update(const float deltaTime) override;
+		void handleEvent(const sf::Event& event) override;
+
 		void updateScoreboard();
 	};
 }
