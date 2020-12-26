@@ -11,6 +11,7 @@ namespace Pong::States
 		tgui::Label::Ptr noteLabel;
 		tgui::Label::Ptr leftPaddleScore;
 		tgui::Label::Ptr rightPaddleScore;
+		sf::RectangleShape separator;
 		Objects::Paddle leftPaddle;
 		Objects::Paddle rightPaddle;
 		Objects::Ball ball;

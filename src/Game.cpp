@@ -4,14 +4,18 @@
 
 namespace Pong
 {
+	Game::Game() : soundManager("assets/sounds/beep.ogg", "assets/sounds/peep.ogg", "assets/sounds/plop.ogg")
+	{
+
+	}
+
 	void Game::init()
 	{
-		window.create(sf::VideoMode(640, 480), "Ping Pong");
-
+		window.create(sf::VideoMode(640, 480), "Ping Pong", sf::Style::Titlebar | sf::Style::Close);
 		sf::Image icon;
-		icon.loadFromFile("icon.png");
+		icon.loadFromFile("assets/icon.png");
 		window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-
+		
 		currentState = std::make_shared<States::MainMenuState>();
 	}
 
@@ -42,16 +46,6 @@ namespace Pong
 			case sf::Event::Closed:
 				stop();
 				break;
-			case sf::Event::Resized:
-				sf::View view;
-
-				auto gameWidth = window.getSize().x;
-				auto gameHeight = window.getSize().y;
-
-				view.setSize(gameWidth, gameHeight);
-				view.setCenter(gameWidth / 2.0f, gameHeight / 2.0f);
-				window.setView(view);
-				break;
 			}
 			currentState->handleEvent(event);
 		}
@@ -78,8 +72,14 @@ namespace Pong
 		return window;
 	}
 
+	SoundManager& Game::getSoundManager()
+	{
+		return soundManager;
+	}
+
 	Game::~Game()
 	{
 		stop();
 	}
+
 }

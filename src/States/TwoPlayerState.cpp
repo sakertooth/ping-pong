@@ -34,8 +34,8 @@ namespace Pong::States
 		rightPaddleScore->setVisible(false);
 		add(rightPaddleScore);
 
-		ball.setRadius(4);
-		ball.setPosition(view.getSize().x / 2, 16);
+		separator.setSize(sf::Vector2f(1, view.getSize().y));
+		separator.setPosition(view.getSize().x / 2, 0);
 
 		noteLabel->setText("Press spacebar to start\n			First to 11 wins");
 		noteLabel->setTextSize(30);
@@ -53,6 +53,7 @@ namespace Pong::States
 			target.draw(leftPaddle);
 			target.draw(rightPaddle);
 			target.draw(ball);
+			target.draw(separator);
 		}
 	}
 
@@ -66,7 +67,6 @@ namespace Pong::States
 			updateScoreboard();
 		}
 	}
-
 
 	void TwoPlayerState::handleEvent(const sf::Event& event)
 	{
@@ -102,15 +102,15 @@ namespace Pong::States
 
 		if (leftPaddleScoreboard == 11)
 		{
-			noteLabel->setText("		Player one has won the game!\n		Press space for the Main Menu");
-			noteLabel->setTextSize(15);
+			noteLabel->setText("			Player one has won the game!\n		Press space for the Main Menu");
+			noteLabel->setTextSize(20);
 			noteLabel->setVisible(true);
 			over = true;
 		}
 		else if (rightPaddleScoreboard == 11)
 		{
-			noteLabel->setText("		Player two has won the game!\n		Press space for the Main Menu");
-			noteLabel->setTextSize(15);
+			noteLabel->setText("			Player two has won the game!\n		Press space for the Main Menu");
+			noteLabel->setTextSize(20);
 			noteLabel->setVisible(true);
 			over = true;
 		}

@@ -14,7 +14,7 @@ namespace Pong::States
 			button->setSize(240, 45);
 			button->setTextSize(30);
 			button->setPosition(x, y);
-			button->getRenderer()->setFont("pong.ttf");
+			button->getRenderer()->setFont("assets/font.ttf");
 			button->getRenderer()->setBackgroundColor(tgui::Color::Black);
 			button->getRenderer()->setTextColor(tgui::Color::White);
 			button->getRenderer()->setBorderColor(tgui::Color::Transparent);
@@ -24,7 +24,7 @@ namespace Pong::States
 
 		titleLabel->setText("Ping Pong");
 		titleLabel->setPosition("(&.width - width) / 2", "(&.height - height) / 2 - 128");
-		titleLabel->getRenderer()->setFont("pong.ttf");
+		titleLabel->getRenderer()->setFont("assets/font.ttf");
 		titleLabel->getRenderer()->setTextColor(tgui::Color::White);
 		titleLabel->setTextSize(45);
 		add(titleLabel);

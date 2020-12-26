@@ -1,68 +1,70 @@
+#pragma once
 #include "Objects/Ball.hpp"
-#include "Objects/Paddle.hpp"
 #include "Game.hpp"
-
-#include <random>
-#include <iostream>
+#include <effolkronium/random.hpp>
 
 namespace Pong::Objects
 {
-	Ball::Ball() : angle(315), speed(470) {
-		const auto& view = Game::getInstance().getWindow().getView();
+	using Random = effolkronium::random_static;
 
-		std::random_device rd;
-		std::default_random_engine e1(rd());
-		std::uniform_int_distribution<int> uniform_dist(0, view.getSize().x);
-		setPosition(uniform_dist(e1), 1);
+	Ball::Ball() : angle(45), speed(450)
+	{
+		const auto& view = Game::getInstance().getWindow().getView();
+		setRadius(4);
+		setPosition(0, 0);
 	}
 
 	void Ball::update(const float deltaTime, Paddle& leftPaddle, Paddle& rightPaddle)
 	{
-		const auto& view = Game::getInstance().getWindow().getView();
+		const auto& view = Game::getInstance().getWindow();
 
-		const auto ballTop = static_cast<int>(getGlobalBounds().top);
-		const auto ballBottom = static_cast<int>(ballTop + getGlobalBounds().height);
-		const auto ballLeft = static_cast<int>(getGlobalBounds().left);
-		const auto ballRight = static_cast<int>(ballLeft + getGlobalBounds().width);
+		const auto ballLeft = getGlobalBounds().left;
+		const auto ballRight = ballLeft + getGlobalBounds().width;
+		const auto ballTop = getGlobalBounds().top;
+		const auto ballBottom = ballTop + getGlobalBounds().height;
 
-		const auto leftPaddleTop = static_cast<int>(leftPaddle.getGlobalBounds().top);
-		const auto leftPaddleBottom = static_cast<int>(leftPaddleTop + leftPaddle.getGlobalBounds().height);
-		const auto leftPaddleLeft = static_cast<int>(leftPaddle.getGlobalBounds().left);
-		const auto leftPaddleRight = static_cast<int>(leftPaddleLeft + leftPaddle.getGlobalBounds().width);
+		const auto leftPaddleLeft = leftPaddle.getGlobalBounds().left;
+		const auto leftPaddleRight = leftPaddleLeft + leftPaddle.getGlobalBounds().width;
+		const auto leftPaddleTop = leftPaddle.getGlobalBounds().top;
+		const auto leftPaddleBottom = leftPaddleTop + leftPaddle.getGlobalBounds().height;
 
-		const auto rightPaddleTop = static_cast<int>(rightPaddle.getGlobalBounds().top);
-		const auto rightPaddleBottom = static_cast<int>(rightPaddleTop + rightPaddle.getGlobalBounds().height);
-		const auto rightPaddleLeft = static_cast<int>(rightPaddle.getGlobalBounds().left);
-		const auto rightPaddleRight = static_cast<int>(rightPaddleLeft + rightPaddle.getGlobalBounds().width);
+		const auto rightPaddleLeft = rightPaddle.getGlobalBounds().left;
+		const auto rightPaddleRight = rightPaddleLeft + rightPaddle.getGlobalBounds().width;
+		const auto rightPaddleTop = rightPaddle.getGlobalBounds().top;
+		const auto rightPaddleBottom = rightPaddleTop + rightPaddle.getGlobalBounds().height;
 
-		if (ballTop <= 0 || ballBottom >= view.getSize().y)
+		if (ballTop < 0 || ballBottom > view.getSize().y)
 		{
 			angle = 360 - angle;
+			Game::getInstance().getSoundManager().getBeepSound().play();
 		}
-		
-		if (ballLeft <= 0)
+
+		if (ballLeft < 0)
 		{
 			rightPaddle.incrementPoint();
-			setPosition(rightPaddleLeft - 5, rightPaddleBottom - ((rightPaddleBottom - rightPaddleTop) / 2));
 			angle = 180;
+			speed = 440;
+			setPosition(rightPaddleLeft - 10, rightPaddleBottom - ((rightPaddleBottom - rightPaddleTop) / 2));
+			Game::getInstance().getSoundManager().getPeepSound().play();
 		}
-		else if (ballRight >= view.getSize().x)
+		else if (ballRight > view.getSize().x)
 		{
 			leftPaddle.incrementPoint();
-			setPosition(leftPaddleRight + 5, leftPaddleBottom - ((leftPaddleBottom - leftPaddleTop) / 2));
 			angle = 0;
+			speed = 440;
+			setPosition(leftPaddleRight + 10, leftPaddleBottom - ((leftPaddleBottom - leftPaddleTop) / 2));
+			Game::getInstance().getSoundManager().getPeepSound().play();
 		}
 
-		if ((ballTop >= rightPaddleTop && ballBottom <= rightPaddleBottom && ballRight == rightPaddleLeft) ||
-			(ballTop >= leftPaddleTop && ballBottom <= leftPaddleBottom && ballLeft == leftPaddleRight))
+		if (leftPaddle.getGlobalBounds().contains(ballLeft, ballTop) || leftPaddle.getGlobalBounds().contains(ballLeft, ballBottom) || 
+			(rightPaddle.getGlobalBounds().contains(ballRight, ballTop) || rightPaddle.getGlobalBounds().contains(ballRight, ballBottom)))
 		{
-			std::random_device rd;
-			std::default_random_engine e1(rd());
-			std::uniform_int_distribution<int> uniform_dist(0, 10);
-
-			angle += 90 + uniform_dist(e1);
+			angle = 180 + Random::get(0, 20) - angle;
+			speed += 5;
+			Game::getInstance().getSoundManager().getPlopSound().play();
 		}
 
 		move(speed * std::cos(angle * 0.0174532925f) * deltaTime, speed * std::sin(angle * 0.0174532925f) * deltaTime);
 	}
+	
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include "States/State.hpp"
+#include "SoundManager.hpp"
 
 namespace Pong
 {
@@ -7,7 +8,10 @@ namespace Pong
 	{
 		sf::RenderWindow window;
 		std::shared_ptr<States::State> currentState;
+		SoundManager soundManager;
 	public:
+		Game();
+
 		void init();
 
 		void stop();
@@ -25,6 +29,8 @@ namespace Pong
 		static Game& getInstance();
 
 		sf::RenderWindow& getWindow();
+
+		SoundManager& getSoundManager();
 
 		~Game();
 	};
