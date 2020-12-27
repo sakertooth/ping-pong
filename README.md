@@ -6,7 +6,7 @@ Ping Pong using SFML + TGUI
 * CMake 3.8>=
 
 # Roadmap
-* Add sounds
+* Add sounds ✔️
 * Add credits for resources
-* Fix bugs with the ball's motion
+* Fix bugs with the ball's motion ✔️
 * Add one player with AI and Easy, Medium, and Hard difficulties
