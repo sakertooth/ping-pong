@@ -6,11 +6,13 @@ set(CMAKE_CXX_STANDARD 17)
 add_executable(main 
 					"src/Main.cpp"
 					"src/Game.cpp"
-					"src/SoundManager.cpp"					 
+					"src/Ball.cpp"
+					"src/SoundManager.cpp"
 					"src/States/MainMenuState.cpp"
 					"src/States/ChooseDifficultyState.cpp"
 					"src/States/TwoPlayerState.cpp"
-					"src/States/SpacebarToStartState.cpp" "src/States/OnePlayerState.cpp")
+					"src/States/SpacebarToStartState.cpp" 
+					"src/States/OnePlayerState.cpp")
 target_include_directories(main PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 find_package(SFML COMPONENTS main graphics audio REQUIRED)

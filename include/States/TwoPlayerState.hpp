@@ -1,28 +1,32 @@
 #pragma once
 #include "State.hpp"
+#include "Ball.hpp"
+#include <SFML/Graphics.hpp>
 #include <TGUI/TGUI.hpp>
 
 namespace Pong::States
 {
-	class TwoPlayerState : public State, public tgui::Gui
+	class TwoPlayerState : public State
 	{
-		tgui::Label::Ptr	leftPaddleScore;
-		tgui::Label::Ptr	rightPaddleScore;
-		sf::RectangleShape	separator;
+		sf::Font			scoreFont;
+
+		sf::Text			leftPaddleScore;
+		sf::Text			rightPaddleScore;
 		
 		sf::RectangleShape	leftPaddle;
 		sf::RectangleShape	rightPaddle;
-		float				paddleSpeed;
-		
-		sf::CircleShape		ball;
-		float				ballSpeed;
+		Ball ball;
+
+		sf::RectangleShape	separator;
+
 		int					ballAngle;
-		bool				ballIsColliding;
+		float				paddleSpeed;
+		float				ballSpeed;
 	public:
 		TwoPlayerState();
 
 		void				draw(sf::RenderTarget& target) override;
-		void				handleEvent(const sf::Event& event) override;
+		void				handleEvent(const sf::Event& event) override {}
 		void				update(const float deltaTime) override;
 		void				updatePaddles(const float deltaTime);
 		void				updateBall(const float deltaTime);
