@@ -3,16 +3,16 @@
 
 int main()
 {
-	auto& game = Pong::Game::getInstance();
+	auto& game		= Pong::Game::getInstance();
+	auto deltaClock	= sf::Clock::Clock();
 	game.init();
 
-	sf::Clock deltaClock;
 	while (game.isRunning())
 	{
 		game.handleEvent();
 		game.draw();
-		game.update(deltaClock.getElapsedTime().asSeconds());
-
+		game.setDeltaTime(deltaClock.getElapsedTime());
+		game.update();
 		deltaClock.restart();
 	}
 }

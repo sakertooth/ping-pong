@@ -1,5 +1,5 @@
 ﻿cmake_minimum_required(VERSION 3.8)
-project("Saker's Ping Pong")
+project("Ping Pong")
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -8,9 +8,9 @@ add_executable(main
 					"src/Game.cpp"
 					"src/SoundManager.cpp"					 
 					"src/States/MainMenuState.cpp"
+					"src/States/ChooseDifficultyState.cpp"
 					"src/States/TwoPlayerState.cpp"
-					"src/Objects/Paddle.cpp"
-					 "src/Objects/Ball.cpp")
+					"src/States/SpacebarToStartState.cpp" "src/States/OnePlayerState.cpp")
 target_include_directories(main PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 find_package(SFML COMPONENTS main graphics audio REQUIRED)

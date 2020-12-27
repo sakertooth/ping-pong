@@ -4,17 +4,23 @@
 
 namespace Pong
 {
-	Game::Game() : soundManager("assets/sounds/beep.ogg", "assets/sounds/peep.ogg", "assets/sounds/plop.ogg")
+	Game::Game() :
+		window(sf::VideoMode(640, 480), "Ping Pong", sf::Style::Titlebar | sf::Style::Close),
+		currentState(nullptr),  
+		soundManager("assets/sounds/beep.ogg", "assets/sounds/peep.ogg", "assets/sounds/plop.ogg")
 	{
+		sf::Image icon;
+		icon.loadFromFile("assets/icon.png");
+		window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+	}
 
+	Game::~Game()
+	{
+		stop();
 	}
 
 	void Game::init()
 	{
-		window.create(sf::VideoMode(640, 480), "Ping Pong", sf::Style::Titlebar | sf::Style::Close);
-		sf::Image icon;
-		icon.loadFromFile("assets/icon.png");
-		window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 		
 		currentState = std::make_shared<States::MainMenuState>();
 	}
@@ -31,9 +37,9 @@ namespace Pong
 		window.display();
 	}
 
-	void Game::update(const float deltaTime)
+	void Game::update()
 	{
-		currentState->update(deltaTime);
+		currentState->update(deltaTime.asSeconds());
 	}
 
 	void Game::handleEvent()
@@ -50,12 +56,12 @@ namespace Pong
 			currentState->handleEvent(event);
 		}
 	}
-
-	void Game::swtichState(const std::shared_ptr<States::State> state)
+	
+	void Game::switchState(const std::shared_ptr<States::State> state)
 	{
 		currentState = state;
 	}
-
+	
 	bool Game::isRunning()
 	{
 		return window.isOpen();
@@ -67,6 +73,11 @@ namespace Pong
 		return game;
 	}
 
+	const sf::Time& Game::getDeltaTime()
+	{
+		return deltaTime;
+	}
+	
 	sf::RenderWindow& Game::getWindow()
 	{
 		return window;
@@ -77,9 +88,8 @@ namespace Pong
 		return soundManager;
 	}
 
-	Game::~Game()
+	void Game::setDeltaTime(const sf::Time& deltaTime)
 	{
-		stop();
+		this->deltaTime = deltaTime;
 	}
-
 }

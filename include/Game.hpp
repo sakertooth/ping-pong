@@ -6,32 +6,27 @@ namespace Pong
 {
 	class Game
 	{
-		sf::RenderWindow window;
-		std::shared_ptr<States::State> currentState;
-		SoundManager soundManager;
+		sf::RenderWindow				window;
+		sf::Time						deltaTime;
+		std::shared_ptr<States::State>	currentState;
+		SoundManager					soundManager;
 	public:
 		Game();
-
-		void init();
-
-		void stop();
-
-		void draw();
-
-		void update(const float deltaTime);
-
-		void handleEvent();
-
-		void swtichState(const std::shared_ptr<States::State> state);
-
-		bool isRunning();
-
-		static Game& getInstance();
-
-		sf::RenderWindow& getWindow();
-
-		SoundManager& getSoundManager();
-
 		~Game();
+
+		void				init();
+		void				stop();
+		void				draw();
+		void				update();
+		void				handleEvent();
+		void				switchState(const std::shared_ptr<States::State> state);
+		bool				isRunning();
+
+		static Game&		getInstance();
+		const sf::Time&		getDeltaTime();
+		sf::RenderWindow&	getWindow();
+		SoundManager&		getSoundManager();
+
+		void				setDeltaTime(const sf::Time& time);
 	};
 }

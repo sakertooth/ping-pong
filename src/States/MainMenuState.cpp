@@ -1,12 +1,15 @@
 #include "States/MainMenuState.hpp"
 #include "States/TwoPlayerState.hpp"
+#include "States/ChooseDifficultyState.hpp"
+#include "States/SpacebarToPlayState.hpp"
 #include "Game.hpp"
 
 namespace Pong::States
 {
 	MainMenuState::MainMenuState() : tgui::Gui(Game::getInstance().getWindow()),
 		titleLabel(tgui::Label::create()),
-		playButton(tgui::Button::create("Play")),
+		onePlayerButton(tgui::Button::create("One Player")),
+		twoPlayerButton(tgui::Button::create("Two Players")),
 		exitButton(tgui::Button::create("Exit"))
 	{
 		auto loadButton = [&](tgui::Button::Ptr button, tgui::Layout x, tgui::Layout y)
@@ -29,15 +32,21 @@ namespace Pong::States
 		titleLabel->setTextSize(45);
 		add(titleLabel);
 
-		loadButton(playButton, "(&.width - width) / 2", "(&.height - height) / 2 - 32");
-		loadButton(exitButton, "(&.width - width) / 2", "(&.height - height) / 2 + 32");
+		loadButton(onePlayerButton, "(&.width - width) / 2", "(&.height - height) / 2");
+		loadButton(twoPlayerButton, "(&.width - width) / 2", "(&.height - height) / 2 + 64");
+		loadButton(exitButton, "(&.width - width) / 2", "(&.height - height) / 2 + 128");
 
-		playButton->connect("pressed", []()
+		onePlayerButton->connect("pressed", []
 		{
-			Game::getInstance().swtichState(std::make_shared<States::TwoPlayerState>());
+			Game::getInstance().switchState(std::make_shared<ChooseDifficultyState>());
 		});
 
-		exitButton->connect("pressed", []() { Game::getInstance().stop(); });
+		twoPlayerButton->connect("pressed", []
+		{
+			Game::getInstance().switchState(std::make_shared<SpacebarToStartState>());
+		});
+
+		exitButton->connect("pressed", [] { Game::getInstance().stop(); });
 	}
 
 	void MainMenuState::draw(sf::RenderTarget& target)
@@ -45,17 +54,8 @@ namespace Pong::States
 		tgui::Gui::draw();
 	}
 
-	void MainMenuState::update(const float deltaTime) {}
-
 	void MainMenuState::handleEvent(const sf::Event& event)
 	{
 		tgui::Gui::handleEvent(event);
-
-		switch (event.type)
-		{
-		case sf::Event::Resized:
-			tgui::Gui::setView(Game::getInstance().getWindow().getView());
-			break;
-		}
 	}
 }

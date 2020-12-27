@@ -1,5 +1,4 @@
 #pragma once
-#include "Objects/Ball.hpp"
 #include "Game.hpp"
 #include <effolkronium/random.hpp>
 
@@ -38,7 +37,7 @@ namespace Pong::Objects
 			angle = 360 - angle;
 			Game::getInstance().getSoundManager().getBeepSound().play();
 		}
-
+		
 		if (ballLeft < 0)
 		{
 			rightPaddle.incrementPoint();
@@ -47,7 +46,8 @@ namespace Pong::Objects
 			setPosition(rightPaddleLeft - 10, rightPaddleBottom - ((rightPaddleBottom - rightPaddleTop) / 2));
 			Game::getInstance().getSoundManager().getPeepSound().play();
 		}
-		else if (ballRight > view.getSize().x)
+		
+		if (ballRight > view.getSize().x)
 		{
 			leftPaddle.incrementPoint();
 			angle = 0;
@@ -55,12 +55,11 @@ namespace Pong::Objects
 			setPosition(leftPaddleRight + 10, leftPaddleBottom - ((leftPaddleBottom - leftPaddleTop) / 2));
 			Game::getInstance().getSoundManager().getPeepSound().play();
 		}
-
+		
 		if (leftPaddle.getGlobalBounds().contains(ballLeft, ballTop) || leftPaddle.getGlobalBounds().contains(ballLeft, ballBottom) || 
 			(rightPaddle.getGlobalBounds().contains(ballRight, ballTop) || rightPaddle.getGlobalBounds().contains(ballRight, ballBottom)))
 		{
-			angle = 180 + Random::get(0, 20) - angle;
-			speed += 5;
+			angle = 180 - angle;
 			Game::getInstance().getSoundManager().getPlopSound().play();
 		}
 
