@@ -7,9 +7,8 @@ namespace Pong::States
 {
 	class SpacebarToStartState : public State, public tgui::Gui
 	{
-		std::optional<Difficulty> onePlayerDifficulty;
-
-		tgui::Label::Ptr spacebarLabel;
+		std::optional<Difficulty>	onePlayerDifficulty;
+		tgui::Label::Ptr			spacebarLabel;
 	public:
 		SpacebarToStartState();
 		SpacebarToStartState(const Difficulty& difficulty);

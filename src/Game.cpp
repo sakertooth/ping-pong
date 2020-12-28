@@ -9,6 +9,8 @@ namespace Pong
 		currentState(nullptr),  
 		soundManager("assets/sounds/beep.ogg", "assets/sounds/peep.ogg", "assets/sounds/plop.ogg")
 	{
+		gameFont.loadFromFile("assets/font.ttf");
+
 		sf::Image icon;
 		icon.loadFromFile("assets/icon.png");
 		window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
@@ -76,6 +78,11 @@ namespace Pong
 	const sf::Time& Game::getDeltaTime()
 	{
 		return deltaTime;
+	}
+
+	sf::Font& Game::getFont()
+	{
+		return gameFont;
 	}
 	
 	sf::RenderWindow& Game::getWindow()

@@ -1,7 +1,5 @@
 #include "SoundManager.hpp"
 
-#include <iostream>
-
 namespace Pong
 {
 	SoundManager::SoundManager(const std::string& beepFilename, const std::string& peepFilename, const std::string plopFilename)

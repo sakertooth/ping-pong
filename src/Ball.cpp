@@ -2,11 +2,11 @@
 #include "Game.hpp"
 #include <effolkronium/random.hpp>
 
-using Random = effolkronium::random_static;
-
 namespace Pong
 {
-	Ball::Ball() : angle(45), speed(500) {}
+	using Random = effolkronium::random_static;
+	
+	Ball::Ball() : angle(315), speed(500) {}
 
 	void Ball::update(const float deltaTime, const sf::RectangleShape& leftPaddle, sf::Text& leftPaddleScore, const sf::RectangleShape& rightPaddle, sf::Text& rightPaddleScore)
 	{
@@ -42,7 +42,7 @@ namespace Pong
 		auto rightPaddleDistX = rightPaddle.getPosition().x - rightPaddle.getSize().x / 2 - getPosition().x;
 		if (getGlobalBounds().intersects(rightPaddle.getGlobalBounds()) && rightPaddleDistX < getRadius() && rightPaddleDistX > 0.0f)
 		{
-			angle = std::atan2f(Random::get(-0.9f, 0.9f), Random::get(-0.9f, -0.2f)) * 57.2957795f;
+			angle = static_cast<int>(std::atan2f(Random::get(-0.9f, 0.9f), Random::get(-0.9f, -0.2f)) * 57.2957795f);
 			setPosition(getPosition().x - 0.1f, getPosition().y);
 			Game::getInstance().getSoundManager().getPlopSound().play();
 		}
@@ -50,11 +50,21 @@ namespace Pong
 		auto leftPaddleDistX = getPosition().x - leftPaddle.getPosition().x - leftPaddle.getSize().x / 2;
 		if (getGlobalBounds().intersects(leftPaddle.getGlobalBounds()) && leftPaddleDistX < getRadius() && leftPaddleDistX > 0.0f)
 		{
-			angle = std::atan2f(Random::get(-0.9f, 0.9f), Random::get(0.2f, 0.9f)) * 57.2957795f;
+			angle = static_cast<int>(std::atan2f(Random::get(-0.9f, 0.9f), Random::get(0.2f, 0.9f)) * 57.2957795f);
 			setPosition(getPosition().x + 0.1f, getPosition().y);
 			Game::getInstance().getSoundManager().getPlopSound().play();
 		}
 
 		move(speed * std::cos(angle * 0.0174532925f) * deltaTime, -speed * std::sin(angle * 0.0174532925f) * deltaTime);
+	}
+
+	int Ball::getAngle()
+	{
+		return angle;
+	}
+
+	int Ball::getSpeed()
+	{
+		return speed;
 	}
 }

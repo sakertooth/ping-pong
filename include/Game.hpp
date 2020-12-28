@@ -8,6 +8,7 @@ namespace Pong
 	{
 		sf::RenderWindow				window;
 		sf::Time						deltaTime;
+		sf::Font						gameFont;
 		std::shared_ptr<States::State>	currentState;
 		SoundManager					soundManager;
 	public:
@@ -24,6 +25,7 @@ namespace Pong
 
 		static Game&		getInstance();
 		const sf::Time&		getDeltaTime();
+		sf::Font&			getFont();
 		sf::RenderWindow&	getWindow();
 		SoundManager&		getSoundManager();
 

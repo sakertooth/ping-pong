@@ -33,13 +33,9 @@ namespace Pong::States
 		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Key::Space)
 		{
 			if (onePlayerDifficulty.has_value())
-			{
-
-			}
+				Game::getInstance().switchState(std::make_shared<OnePlayerState>(onePlayerDifficulty.value()));
 			else
-			{
 				Game::getInstance().switchState(std::make_shared<TwoPlayerState>());
-			}
 		}
 	}
 }
