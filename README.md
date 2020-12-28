@@ -10,7 +10,7 @@ Ping Pong using SFML + TGUI
 
 # Credits
 * Sounds - [OpenGameArt](https://opengameart.org/content/3-ping-pong-sounds-8-bit-style)
-* Font - [Pixeboy](https://www.dafont.com/pixeboy.font)
+* Font - [Pixellari](https://www.dafont.com/pixellari.font)
 
 # Roadmap
 * Add sounds ✔️
