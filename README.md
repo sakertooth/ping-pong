@@ -6,7 +6,6 @@ Ping Pong using SFML + TGUI
 * CMake 3.8>=
 * SFML 2
 * TGUI
-* effolkronium/random
 
 # Credits
 * Sounds - [OpenGameArt](https://opengameart.org/content/3-ping-pong-sounds-8-bit-style)
