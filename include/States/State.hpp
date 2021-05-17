@@ -1,7 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-namespace Pong::States
+namespace Pong
 {
 	class State
 	{

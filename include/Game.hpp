@@ -9,7 +9,7 @@ namespace Pong
 		sf::RenderWindow				window;
 		sf::Time						deltaTime;
 		sf::Font						gameFont;
-		std::shared_ptr<States::State>	currentState;
+		std::shared_ptr<State>	currentState;
 		SoundManager					soundManager;
 	public:
 		Game();
@@ -20,7 +20,7 @@ namespace Pong
 		void				draw();
 		void				update();
 		void				handleEvent();
-		void				switchState(const std::shared_ptr<States::State> state);
+		void				switchState(const std::shared_ptr<State> state);
 		bool				isRunning();
 
 		static Game&		getInstance();

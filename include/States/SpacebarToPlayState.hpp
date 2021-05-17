@@ -3,7 +3,7 @@
 #include <optional>
 #include <TGUI/TGUI.hpp>
 
-namespace Pong::States
+namespace Pong
 {
 	class SpacebarToStartState : public State, public tgui::Gui
 	{

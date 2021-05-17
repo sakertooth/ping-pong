@@ -3,7 +3,7 @@
 #include "States/TwoPlayerState.hpp"
 #include "Game.hpp"
 
-namespace Pong::States
+namespace Pong
 {
 	SpacebarToStartState::SpacebarToStartState() : tgui::Gui(Game::getInstance().getWindow()),
 		spacebarLabel(tgui::Label::create())

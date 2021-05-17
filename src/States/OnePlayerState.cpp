@@ -1,10 +1,9 @@
 #include "States/OnePlayerState.hpp"
 #include "States/GameOverState.hpp"
 #include "Game.hpp"
+#include "random.hpp"
 
-#include <effolkronium/random.hpp>
-
-namespace Pong::States
+namespace Pong
 {
 	using Random = effolkronium::random_static;
 

@@ -2,7 +2,7 @@
 #include "States/MainMenuState.hpp"
 #include "Game.hpp"
 
-namespace Pong::States
+namespace Pong
 {
 	GameOverState::GameOverState(const std::string& message)
 	{

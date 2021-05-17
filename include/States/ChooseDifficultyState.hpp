@@ -3,7 +3,7 @@
 #include "States/TwoPlayerState.hpp"
 #include <TGUI/TGUI.hpp>
 
-namespace Pong::States
+namespace Pong
 {
 	enum class Difficulty
 	{
@@ -24,8 +24,8 @@ namespace Pong::States
 	public:
 		ChooseDifficultyState();
 
-		void				draw(sf::RenderTarget& target);
-		void				handleEvent(const sf::Event& event);
-		void				update(const float deltaTime) {}
+		void draw(sf::RenderTarget& target);
+		void handleEvent(const sf::Event& event);
+		void update(const float deltaTime) {}
 	};
 }

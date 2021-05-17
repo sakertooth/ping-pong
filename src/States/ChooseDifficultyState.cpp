@@ -3,7 +3,7 @@
 #include "States/SpacebarToPlayState.hpp"
 #include "Game.hpp"
 
-namespace Pong::States
+namespace Pong
 {
 	ChooseDifficultyState::ChooseDifficultyState() : tgui::Gui(Game::getInstance().getWindow()),
 		difficultyChosen(Difficulty::Easy),

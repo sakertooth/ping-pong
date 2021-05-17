@@ -4,7 +4,7 @@
 #include "States/ChooseDifficultyState.hpp"
 #include <TGUI/TGUI.hpp>
 
-namespace Pong::States
+namespace Pong
 {
 	class OnePlayerState : public TwoPlayerState
 	{

@@ -3,7 +3,7 @@
 #include "States/TwoPlayerState.hpp"
 #include "States/GameOverState.hpp"
 
-namespace Pong::States
+namespace Pong
 {
 	TwoPlayerState::TwoPlayerState() : paddleSpeed(500)
 	{

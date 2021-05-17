@@ -23,8 +23,7 @@ namespace Pong
 
 	void Game::init()
 	{
-		
-		currentState = std::make_shared<States::MainMenuState>();
+		currentState = std::make_shared<MainMenuState>();
 	}
 
 	void Game::stop()
@@ -59,7 +58,7 @@ namespace Pong
 		}
 	}
 	
-	void Game::switchState(const std::shared_ptr<States::State> state)
+	void Game::switchState(const std::shared_ptr<State> state)
 	{
 		currentState = state;
 	}

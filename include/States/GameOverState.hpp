@@ -2,7 +2,7 @@
 #include "State.hpp"
 #include <TGUI/TGUI.hpp>
 
-namespace Pong::States
+namespace Pong
 {
 	class GameOverState : public State
 	{

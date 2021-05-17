@@ -4,7 +4,7 @@
 #include "States/SpacebarToPlayState.hpp"
 #include "Game.hpp"
 
-namespace Pong::States
+namespace Pong
 {
 	MainMenuState::MainMenuState() : tgui::Gui(Game::getInstance().getWindow()),
 		titleLabel(tgui::Label::create()),
