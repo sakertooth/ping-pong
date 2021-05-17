@@ -22,6 +22,6 @@ namespace Pong
 
 		virtual void draw(sf::RenderTarget &target) override;
 		virtual void handleEvent(const sf::Event &event) override {}
-		virtual void update(const float deltaTime) override;
+		virtual void update(const sf::Time& deltaTime) override;
 	};
 }

@@ -16,6 +16,6 @@ namespace Pong
 
 		void draw(sf::RenderTarget &target) override;
 		void handleEvent(const sf::Event &event) override;
-		void update(const float deltaTime) override {}
+		void update(const sf::Time& deltaTime) override {}
 	};
 }

@@ -27,6 +27,6 @@ namespace Pong
 
     void draw(sf::RenderTarget &target);
     void handleEvent(const sf::Event &event);
-    void update(const float deltaTime) {}
+    void update(const sf::Time& deltaTime) {}
   };
 }

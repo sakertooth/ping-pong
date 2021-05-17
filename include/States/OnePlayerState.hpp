@@ -17,7 +17,7 @@ namespace Pong
 		OnePlayerState(const Difficulty &difficulty);
 
 		virtual void draw(sf::RenderTarget &target) override;
-		virtual void update(const float deltaTime) override;
-		void updateAI(const float deltaTime);
+		virtual void update(const sf::Time& deltaTime) override;
+		void updateAI(const sf::Time& deltaTime);
 	};
 }
