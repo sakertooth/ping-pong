@@ -26,7 +26,7 @@ namespace Pong
 
 		static Game &getInstance();
 		const sf::Font &getFont();
-		const sf::RenderWindow &getWindow();
-		const sf::Sound &getSound(const std::string& id);
+		sf::RenderWindow &getWindow();
+		sf::Sound &getSound(const std::string& id);
 	};
 }

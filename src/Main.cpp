@@ -10,9 +10,7 @@ int main()
 	while (game.isRunning())
 	{
 		game.handleEvent();
+		game.update(deltaClock.restart());
 		game.draw();
-		game.setDeltaTime(deltaClock.getElapsedTime());
-		game.update();
-		deltaClock.restart();
 	}
 }

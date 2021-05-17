@@ -32,14 +32,14 @@ namespace Pong
 		TwoPlayerState::draw(target);
 	}
 
-	void OnePlayerState::update(const float deltaTime)
+	void OnePlayerState::update(const sf::Time& deltaTime)
 	{
 		const auto &window = Game::getInstance().getWindow();
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && leftPaddle.getPosition().y - leftPaddle.getLocalBounds().height / 2 > 0.0f)
-			leftPaddle.move(0.0f, -paddleSpeed * deltaTime);
+			leftPaddle.move(0.0f, -paddleSpeed * deltaTime.asSeconds());
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) && leftPaddle.getPosition().y + leftPaddle.getLocalBounds().height / 2 < window.getSize().y)
-			leftPaddle.move(0.0f, paddleSpeed * deltaTime);
+			leftPaddle.move(0.0f, paddleSpeed * deltaTime.asSeconds());
 
 		if (rightPaddleScore.getString().toAnsiString() == "11")
 			Game::getInstance().switchState(std::make_shared<GameOverState>("Player two has won! Press space to go to the main menu."));
@@ -50,7 +50,7 @@ namespace Pong
 		ball.update(deltaTime, leftPaddle, leftPaddleScore, rightPaddle, rightPaddleScore);
 	}
 
-	void OnePlayerState::updateAI(const float deltaTime)
+	void OnePlayerState::updateAI(const sf::Time& deltaTime)
 	{
 		const auto &window = Game::getInstance().getWindow();
 
@@ -65,20 +65,20 @@ namespace Pong
 			else if (willHit)
 			{
 				if (ball.getPosition().y + ball.getRadius() > rightPaddle.getPosition().y + rightPaddle.getGlobalBounds().height / 2)
-					rightPaddle.move(0.0f, paddleSpeed * deltaTime);
+					rightPaddle.move(0.0f, paddleSpeed * deltaTime.asSeconds());
 				else if (ball.getPosition().y - ball.getRadius() < rightPaddle.getPosition().y - rightPaddle.getGlobalBounds().height / 2)
-					rightPaddle.move(0.0f, -paddleSpeed * deltaTime);
+					rightPaddle.move(0.0f, -paddleSpeed * deltaTime.asSeconds());
 			}
 			else
 			{
 				const auto ballVelY = ball.getSpeed() * std::sin(ball.getAngle() * 0.0174532925f);
 				if (ballVelY > 0.0f && rightPaddle.getPosition().y - rightPaddle.getGlobalBounds().height / 2 > 0.0f)
 				{
-					rightPaddle.move(0.0f, -paddleSpeed * deltaTime);
+					rightPaddle.move(0.0f, -paddleSpeed * deltaTime.asSeconds());
 				}
 				else if (ballVelY < 0.0f && rightPaddle.getPosition().y + rightPaddle.getGlobalBounds().height / 2 < window.getSize().y)
 				{
-					rightPaddle.move(0.0f, paddleSpeed * deltaTime);
+					rightPaddle.move(0.0f, paddleSpeed * deltaTime.asSeconds());
 				}
 				else if (static_cast<int>(ballVelY) == 0)
 				{

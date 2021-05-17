@@ -11,7 +11,7 @@ namespace Pong
 	public:
 		Ball();
 
-		void update(const float deltaTime, const sf::RectangleShape &leftPaddle, sf::Text &leftPaddleScore, const sf::RectangleShape &rightPaddle, sf::Text &rightPaddleScore);
+		void update(const sf::Time& deltaTime, const sf::RectangleShape &leftPaddle, sf::Text &leftPaddleScore, const sf::RectangleShape &rightPaddle, sf::Text &rightPaddleScore);
 		int getAngle();
 		int getSpeed();
 	};

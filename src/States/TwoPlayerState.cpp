@@ -46,18 +46,18 @@ namespace Pong
 		target.draw(separator);
 	}
 
-	void TwoPlayerState::update(const float deltaTime)
+	void TwoPlayerState::update(const sf::Time& deltaTime)
 	{
 		const auto &window = Game::getInstance().getWindow();
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && leftPaddle.getPosition().y - leftPaddle.getLocalBounds().height / 2 > 0.0f)
-			leftPaddle.move(0, -paddleSpeed * deltaTime);
+			leftPaddle.move(0, -paddleSpeed * deltaTime.asSeconds());
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S) && leftPaddle.getPosition().y + leftPaddle.getLocalBounds().height / 2 < window.getSize().y)
-			leftPaddle.move(0, paddleSpeed * deltaTime);
+			leftPaddle.move(0, paddleSpeed * deltaTime.asSeconds());
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up) && rightPaddle.getPosition().y - rightPaddle.getLocalBounds().height / 2 > 0.0f)
-			rightPaddle.move(0, -paddleSpeed * deltaTime);
+			rightPaddle.move(0, -paddleSpeed * deltaTime.asSeconds());
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down) && rightPaddle.getPosition().y + rightPaddle.getLocalBounds().height / 2 < window.getSize().y)
-			rightPaddle.move(0, paddleSpeed * deltaTime);
+			rightPaddle.move(0, paddleSpeed * deltaTime.asSeconds());
 
 		ball.update(deltaTime, leftPaddle, leftPaddleScore, rightPaddle, rightPaddleScore);
 
