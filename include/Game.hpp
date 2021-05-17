@@ -10,8 +10,7 @@ namespace Pong
 		sf::Time deltaTime;
 		sf::Font gameFont;
 		std::shared_ptr<State> currentState;
-		SoundManager soundManager;
-
+		std::map<std::string, std::pair<sf::SoundBuffer, sf::Sound>> sounds;
 	public:
 		Game();
 		~Game();
@@ -19,17 +18,15 @@ namespace Pong
 		void init();
 		void stop();
 		void draw();
-		void update();
+		void update(const sf::Time& deltaTime);
 		void handleEvent();
 		void switchState(const std::shared_ptr<State> state);
 		bool isRunning();
+		void registerSound(const std::string &id, const std::string &file);
 
 		static Game &getInstance();
-		const sf::Time &getDeltaTime();
-		sf::Font &getFont();
-		sf::RenderWindow &getWindow();
-		SoundManager &getSoundManager();
-
-		void setDeltaTime(const sf::Time &time);
+		const sf::Font &getFont();
+		const sf::RenderWindow &getWindow();
+		const sf::Sound &getSound(const std::string& id);
 	};
 }
