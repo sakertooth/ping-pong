@@ -3,7 +3,7 @@ Ping Pong using SFML + TGUI
 
 # Requirements
 * C++17
-* CMake 3.8>=
+* CMake >=3.0.0
 * SFML 2
 * TGUI
 
