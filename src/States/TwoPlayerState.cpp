@@ -7,8 +7,8 @@ namespace Pong
 {
 	TwoPlayerState::TwoPlayerState() : paddleSpeed(500)
 	{
-		const auto& window		= Game::getInstance().getWindow();
-		const auto paddleSize	= sf::Vector2f(3, 64);
+		const auto &window = Game::getInstance().getWindow();
+		const auto paddleSize = sf::Vector2f(3, 64);
 
 		leftPaddleScore.setFont(Game::getInstance().getFont());
 		leftPaddleScore.setCharacterSize(50);
@@ -36,7 +36,7 @@ namespace Pong
 		separator.setPosition(window.getSize().x / 2.0f, 0);
 	}
 
-	void TwoPlayerState::draw(sf::RenderTarget& target)
+	void TwoPlayerState::draw(sf::RenderTarget &target)
 	{
 		target.draw(leftPaddleScore);
 		target.draw(rightPaddleScore);
@@ -48,7 +48,7 @@ namespace Pong
 
 	void TwoPlayerState::update(const float deltaTime)
 	{
-		const auto& window = Game::getInstance().getWindow();
+		const auto &window = Game::getInstance().getWindow();
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && leftPaddle.getPosition().y - leftPaddle.getLocalBounds().height / 2 > 0.0f)
 			leftPaddle.move(0, -paddleSpeed * deltaTime);
@@ -57,7 +57,7 @@ namespace Pong
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Up) && rightPaddle.getPosition().y - rightPaddle.getLocalBounds().height / 2 > 0.0f)
 			rightPaddle.move(0, -paddleSpeed * deltaTime);
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down) && rightPaddle.getPosition().y + rightPaddle.getLocalBounds().height / 2 < window.getSize().y)
-			rightPaddle.move(0, paddleSpeed * deltaTime);		
+			rightPaddle.move(0, paddleSpeed * deltaTime);
 
 		ball.update(deltaTime, leftPaddle, leftPaddleScore, rightPaddle, rightPaddleScore);
 

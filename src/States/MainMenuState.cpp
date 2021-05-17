@@ -7,10 +7,10 @@
 namespace Pong
 {
 	MainMenuState::MainMenuState() : tgui::Gui(Game::getInstance().getWindow()),
-		titleLabel(tgui::Label::create()),
-		onePlayerButton(tgui::Button::create("One Player")),
-		twoPlayerButton(tgui::Button::create("Two Players")),
-		exitButton(tgui::Button::create("Exit"))
+									 titleLabel(tgui::Label::create()),
+									 onePlayerButton(tgui::Button::create("One Player")),
+									 twoPlayerButton(tgui::Button::create("Two Players")),
+									 exitButton(tgui::Button::create("Exit"))
 	{
 		auto loadButton = [&](tgui::Button::Ptr button, tgui::Layout x, tgui::Layout y)
 		{
@@ -37,24 +37,21 @@ namespace Pong
 		loadButton(exitButton, "(&.width - width) / 2", "(&.height - height) / 2 + 128");
 
 		onePlayerButton->connect("pressed", []
-		{
-			Game::getInstance().switchState(std::make_shared<ChooseDifficultyState>());
-		});
+								 { Game::getInstance().switchState(std::make_shared<ChooseDifficultyState>()); });
 
 		twoPlayerButton->connect("pressed", []
-		{
-			Game::getInstance().switchState(std::make_shared<SpacebarToStartState>());
-		});
+								 { Game::getInstance().switchState(std::make_shared<SpacebarToStartState>()); });
 
-		exitButton->connect("pressed", [] { Game::getInstance().stop(); });
+		exitButton->connect("pressed", []
+							{ Game::getInstance().stop(); });
 	}
 
-	void MainMenuState::draw(sf::RenderTarget& target)
+	void MainMenuState::draw(sf::RenderTarget &target)
 	{
 		tgui::Gui::draw();
 	}
 
-	void MainMenuState::handleEvent(const sf::Event& event)
+	void MainMenuState::handleEvent(const sf::Event &event)
 	{
 		tgui::Gui::handleEvent(event);
 	}

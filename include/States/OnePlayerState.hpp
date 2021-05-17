@@ -8,15 +8,16 @@ namespace Pong
 {
 	class OnePlayerState : public TwoPlayerState
 	{
-		Difficulty		difficulty;
-		float			probabilityOfHit;
-		bool			willHit;
-		bool			willHitCalculated;
-	public:
-		OnePlayerState(const Difficulty& difficulty);
+		Difficulty difficulty;
+		float probabilityOfHit;
+		bool willHit;
+		bool willHitCalculated;
 
-		virtual void	draw(sf::RenderTarget& target) override;
-		virtual void	update(const float deltaTime) override;
-		void			updateAI(const float deltaTime);
+	public:
+		OnePlayerState(const Difficulty &difficulty);
+
+		virtual void draw(sf::RenderTarget &target) override;
+		virtual void update(const float deltaTime) override;
+		void updateAI(const float deltaTime);
 	};
 }

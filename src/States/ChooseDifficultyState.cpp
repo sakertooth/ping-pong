@@ -6,13 +6,13 @@
 namespace Pong
 {
 	ChooseDifficultyState::ChooseDifficultyState() : tgui::Gui(Game::getInstance().getWindow()),
-		difficultyChosen(Difficulty::Easy),
-		chooseDifficultyLabel(tgui::Label::create("Choose Difficulty")),
-		difficultyLabel(tgui::Label::create("Easy")),
-		forwardButton(tgui::Button::create(">")),
-		backwardButton(tgui::Button::create("<")),
-		goBackButton(tgui::Button::create("Go Back")),
-		playButton(tgui::Button::create("Play"))
+													 difficultyChosen(Difficulty::Easy),
+													 chooseDifficultyLabel(tgui::Label::create("Choose Difficulty")),
+													 difficultyLabel(tgui::Label::create("Easy")),
+													 forwardButton(tgui::Button::create(">")),
+													 backwardButton(tgui::Button::create("<")),
+													 goBackButton(tgui::Button::create("Go Back")),
+													 playButton(tgui::Button::create("Play"))
 	{
 		chooseDifficultyLabel->setPosition("(&.width - width) / 2", "(&.height - height) / 2 - 128");
 		chooseDifficultyLabel->getRenderer()->setFont("assets/font.ttf");
@@ -35,20 +35,20 @@ namespace Pong
 		forwardButton->getRenderer()->setBorderColor(tgui::Color::Transparent);
 		forwardButton->getRenderer()->setBorderColorFocused(tgui::Color::Transparent);
 		forwardButton->connect("pressed", [&]
-		{
-			if (difficultyLabel->getText() == "Easy")
-			{
-				difficultyLabel->setText("Medium");
-				backwardButton->setVisible(true);
-				difficultyChosen = Difficulty::Medium;
-			}
-			else if (difficultyLabel->getText() == "Medium")
-			{
-				difficultyLabel->setText("Hard");
-				forwardButton->setVisible(false);
-				difficultyChosen = Difficulty::Hard;
-			}
-		});
+							   {
+								   if (difficultyLabel->getText() == "Easy")
+								   {
+									   difficultyLabel->setText("Medium");
+									   backwardButton->setVisible(true);
+									   difficultyChosen = Difficulty::Medium;
+								   }
+								   else if (difficultyLabel->getText() == "Medium")
+								   {
+									   difficultyLabel->setText("Hard");
+									   forwardButton->setVisible(false);
+									   difficultyChosen = Difficulty::Hard;
+								   }
+							   });
 		add(forwardButton);
 
 		backwardButton->setSize(48, 48);
@@ -61,20 +61,20 @@ namespace Pong
 		backwardButton->getRenderer()->setBorderColorFocused(tgui::Color::Transparent);
 		backwardButton->setVisible(false);
 		backwardButton->connect("pressed", [&]
-		{
-			if (difficultyLabel->getText() == "Hard")
-			{
-				difficultyLabel->setText("Medium");
-				forwardButton->setVisible(true);
-				difficultyChosen = Difficulty::Medium;
-			}
-			else if (difficultyLabel->getText() == "Medium")
-			{
-				difficultyLabel->setText("Easy");
-				backwardButton->setVisible(false);
-				difficultyChosen = Difficulty::Easy;
-			}
-		});
+								{
+									if (difficultyLabel->getText() == "Hard")
+									{
+										difficultyLabel->setText("Medium");
+										forwardButton->setVisible(true);
+										difficultyChosen = Difficulty::Medium;
+									}
+									else if (difficultyLabel->getText() == "Medium")
+									{
+										difficultyLabel->setText("Easy");
+										backwardButton->setVisible(false);
+										difficultyChosen = Difficulty::Easy;
+									}
+								});
 		add(backwardButton);
 
 		goBackButton->setSize(240, 45);
@@ -86,9 +86,7 @@ namespace Pong
 		goBackButton->getRenderer()->setBorderColor(tgui::Color::Transparent);
 		goBackButton->getRenderer()->setBorderColorFocused(tgui::Color::Transparent);
 		goBackButton->connect("pressed", []
-		{
-			Game::getInstance().switchState(std::make_shared<MainMenuState>());
-		});
+							  { Game::getInstance().switchState(std::make_shared<MainMenuState>()); });
 		add(goBackButton);
 
 		playButton->setSize(240, 45);
@@ -100,18 +98,16 @@ namespace Pong
 		playButton->getRenderer()->setBorderColor(tgui::Color::Transparent);
 		playButton->getRenderer()->setBorderColorFocused(tgui::Color::Transparent);
 		playButton->connect("pressed", [&]
-		{
-			Game::getInstance().switchState(std::make_shared<SpacebarToStartState>(difficultyChosen));
-		});
+							{ Game::getInstance().switchState(std::make_shared<SpacebarToStartState>(difficultyChosen)); });
 		add(playButton);
 	}
 
-	void ChooseDifficultyState::draw(sf::RenderTarget& target)
+	void ChooseDifficultyState::draw(sf::RenderTarget &target)
 	{
 		tgui::Gui::draw();
 	}
 
-	void ChooseDifficultyState::handleEvent(const sf::Event& event)
+	void ChooseDifficultyState::handleEvent(const sf::Event &event)
 	{
 		tgui::Gui::handleEvent(event);
 	}

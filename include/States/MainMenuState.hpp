@@ -10,11 +10,12 @@ namespace Pong
 		tgui::Button::Ptr onePlayerButton;
 		tgui::Button::Ptr twoPlayerButton;
 		tgui::Button::Ptr exitButton;
+
 	public:
 		MainMenuState();
 
-		void draw(sf::RenderTarget& target) override;
-		void handleEvent(const sf::Event& event) override;
+		void draw(sf::RenderTarget &target) override;
+		void handleEvent(const sf::Event &event) override;
 		void update(const float deltaTime) override {}
 	};
 }

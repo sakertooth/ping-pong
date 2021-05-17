@@ -6,7 +6,7 @@
 namespace Pong
 {
 	SpacebarToStartState::SpacebarToStartState() : tgui::Gui(Game::getInstance().getWindow()),
-		spacebarLabel(tgui::Label::create())
+												   spacebarLabel(tgui::Label::create())
 	{
 		spacebarLabel->setText("		Press spacebar to start\n		First to 11 points wins");
 		spacebarLabel->setTextSize(30);
@@ -16,17 +16,17 @@ namespace Pong
 		add(spacebarLabel);
 	}
 
-	SpacebarToStartState::SpacebarToStartState(const Difficulty& difficulty) : SpacebarToStartState::SpacebarToStartState()
+	SpacebarToStartState::SpacebarToStartState(const Difficulty &difficulty) : SpacebarToStartState::SpacebarToStartState()
 	{
 		onePlayerDifficulty = difficulty;
 	}
 
-	void SpacebarToStartState::draw(sf::RenderTarget& target)
+	void SpacebarToStartState::draw(sf::RenderTarget &target)
 	{
 		tgui::Gui::draw();
 	}
 
-	void SpacebarToStartState::handleEvent(const sf::Event& event)
+	void SpacebarToStartState::handleEvent(const sf::Event &event)
 	{
 		tgui::Gui::handleEvent(event);
 

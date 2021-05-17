@@ -5,12 +5,12 @@
 namespace Pong
 {
 	using Random = effolkronium::random_static;
-	
+
 	Ball::Ball() : angle(315), speed(500) {}
 
-	void Ball::update(const float deltaTime, const sf::RectangleShape& leftPaddle, sf::Text& leftPaddleScore, const sf::RectangleShape& rightPaddle, sf::Text& rightPaddleScore)
+	void Ball::update(const float deltaTime, const sf::RectangleShape &leftPaddle, sf::Text &leftPaddleScore, const sf::RectangleShape &rightPaddle, sf::Text &rightPaddleScore)
 	{
-		const auto& window = Game::getInstance().getWindow();
+		const auto &window = Game::getInstance().getWindow();
 
 		if (getPosition().y - getRadius() < 0.0f)
 		{

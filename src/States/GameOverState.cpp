@@ -4,9 +4,9 @@
 
 namespace Pong
 {
-	GameOverState::GameOverState(const std::string& message)
+	GameOverState::GameOverState(const std::string &message)
 	{
-		const auto& window = Game::getInstance().getWindow();
+		const auto &window = Game::getInstance().getWindow();
 
 		this->message.setFont(Game::getInstance().getFont());
 		this->message.setCharacterSize(24);
@@ -15,12 +15,12 @@ namespace Pong
 		this->message.setPosition(static_cast<float>(window.getSize().x) / 2.0f, static_cast<float>(window.getSize().y) / 2.0f);
 	}
 
-	void GameOverState::draw(sf::RenderTarget& target)
+	void GameOverState::draw(sf::RenderTarget &target)
 	{
 		target.draw(message);
 	}
 
-	void GameOverState::handleEvent(const sf::Event& event)
+	void GameOverState::handleEvent(const sf::Event &event)
 	{
 		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
 		{

@@ -3,8 +3,8 @@
 
 int main()
 {
-	auto& game		= Pong::Game::getInstance();
-	auto deltaClock	= sf::Clock::Clock();
+	auto &game = Pong::Game::getInstance();
+	auto deltaClock = sf::Clock::Clock();
 	game.init();
 
 	while (game.isRunning())

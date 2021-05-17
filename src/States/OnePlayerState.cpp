@@ -7,11 +7,11 @@ namespace Pong
 {
 	using Random = effolkronium::random_static;
 
-	OnePlayerState::OnePlayerState(const Difficulty& difficulty) : TwoPlayerState(), 
-		difficulty(difficulty), 
-		probabilityOfHit(0.0f), 
-		willHit(false),
-		willHitCalculated(false)
+	OnePlayerState::OnePlayerState(const Difficulty &difficulty) : TwoPlayerState(),
+																   difficulty(difficulty),
+																   probabilityOfHit(0.0f),
+																   willHit(false),
+																   willHitCalculated(false)
 	{
 		switch (difficulty)
 		{
@@ -27,14 +27,14 @@ namespace Pong
 		}
 	}
 
-	void OnePlayerState::draw(sf::RenderTarget& target)
-	{	
+	void OnePlayerState::draw(sf::RenderTarget &target)
+	{
 		TwoPlayerState::draw(target);
 	}
 
 	void OnePlayerState::update(const float deltaTime)
 	{
-		const auto& window = Game::getInstance().getWindow();
+		const auto &window = Game::getInstance().getWindow();
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) && leftPaddle.getPosition().y - leftPaddle.getLocalBounds().height / 2 > 0.0f)
 			leftPaddle.move(0.0f, -paddleSpeed * deltaTime);
@@ -52,8 +52,8 @@ namespace Pong
 
 	void OnePlayerState::updateAI(const float deltaTime)
 	{
-		const auto& window	= Game::getInstance().getWindow();
-		 
+		const auto &window = Game::getInstance().getWindow();
+
 		if (std::cosf(ball.getAngle() * 0.0174532925f) > 0.0f)
 		{
 			if (!willHitCalculated)
@@ -85,7 +85,7 @@ namespace Pong
 					willHit = true;
 				}
 			}
-			
+
 			auto rightPaddleDistX = rightPaddle.getPosition().x - rightPaddle.getSize().x / 2 - ball.getPosition().x;
 			if (ball.getGlobalBounds().intersects(rightPaddle.getGlobalBounds()) && rightPaddleDistX < ball.getRadius() && rightPaddleDistX > 0.0f)
 			{

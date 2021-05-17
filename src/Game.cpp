@@ -4,10 +4,9 @@
 
 namespace Pong
 {
-	Game::Game() :
-		window(sf::VideoMode(640, 480), "Ping Pong", sf::Style::Titlebar | sf::Style::Close),
-		currentState(nullptr),  
-		soundManager("assets/sounds/beep.ogg", "assets/sounds/peep.ogg", "assets/sounds/plop.ogg")
+	Game::Game() : window(sf::VideoMode(640, 480), "Ping Pong", sf::Style::Titlebar | sf::Style::Close),
+				   currentState(nullptr),
+				   soundManager("assets/sounds/beep.ogg", "assets/sounds/peep.ogg", "assets/sounds/plop.ogg")
 	{
 		gameFont.loadFromFile("assets/font.ttf");
 
@@ -57,44 +56,44 @@ namespace Pong
 			currentState->handleEvent(event);
 		}
 	}
-	
+
 	void Game::switchState(const std::shared_ptr<State> state)
 	{
 		currentState = state;
 	}
-	
+
 	bool Game::isRunning()
 	{
 		return window.isOpen();
 	}
 
-	Game& Game::getInstance()
+	Game &Game::getInstance()
 	{
 		static Game game;
 		return game;
 	}
 
-	const sf::Time& Game::getDeltaTime()
+	const sf::Time &Game::getDeltaTime()
 	{
 		return deltaTime;
 	}
 
-	sf::Font& Game::getFont()
+	sf::Font &Game::getFont()
 	{
 		return gameFont;
 	}
-	
-	sf::RenderWindow& Game::getWindow()
+
+	sf::RenderWindow &Game::getWindow()
 	{
 		return window;
 	}
 
-	SoundManager& Game::getSoundManager()
+	SoundManager &Game::getSoundManager()
 	{
 		return soundManager;
 	}
 
-	void Game::setDeltaTime(const sf::Time& deltaTime)
+	void Game::setDeltaTime(const sf::Time &deltaTime)
 	{
 		this->deltaTime = deltaTime;
 	}

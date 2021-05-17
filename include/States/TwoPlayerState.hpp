@@ -9,18 +9,19 @@ namespace Pong
 	class TwoPlayerState : public State
 	{
 	protected:
-		sf::Text			leftPaddleScore;
-		sf::Text			rightPaddleScore;
-		sf::RectangleShape	leftPaddle;
-		sf::RectangleShape	rightPaddle;
+		sf::Text leftPaddleScore;
+		sf::Text rightPaddleScore;
+		sf::RectangleShape leftPaddle;
+		sf::RectangleShape rightPaddle;
 		Ball ball;
-		sf::RectangleShape	separator;
-		float				paddleSpeed;
+		sf::RectangleShape separator;
+		float paddleSpeed;
+
 	public:
 		TwoPlayerState();
 
-		virtual void		draw(sf::RenderTarget& target) override;
-		virtual void		handleEvent(const sf::Event& event) override {}
-		virtual void		update(const float deltaTime) override;
+		virtual void draw(sf::RenderTarget &target) override;
+		virtual void handleEvent(const sf::Event &event) override {}
+		virtual void update(const float deltaTime) override;
 	};
 }
