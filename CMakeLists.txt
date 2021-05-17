@@ -7,7 +7,6 @@ add_executable(pingpong WIN32
 					${CMAKE_SOURCE_DIR}/src/Main.cpp
 					${CMAKE_SOURCE_DIR}/src/Game.cpp
 					${CMAKE_SOURCE_DIR}/src/Ball.cpp
-					${CMAKE_SOURCE_DIR}/src/SoundManager.cpp
 					${CMAKE_SOURCE_DIR}/src/States/MainMenuState.cpp
 					${CMAKE_SOURCE_DIR}/src/States/ChooseDifficultyState.cpp
 					${CMAKE_SOURCE_DIR}/src/States/TwoPlayerState.cpp
