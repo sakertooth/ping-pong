@@ -1,9 +1,18 @@
 #include "Game.hpp"
 #include "States/MainMenuState.hpp"
+#include <iostream>
 
 Game::Game() {
     window.create(sf::VideoMode(640, 480), "Ping Pong", sf::Style::Titlebar | sf::Style::Close);
+    if (!font.loadFromFile("assets/font.ttf")) {
+        std::cout << "Game font could not be loaded.\n";
+    }
+    
     currentState = std::make_shared<MainMenuState>();
+}
+
+void Game::init() {
+    currentState->init();
 }
 
 Game::~Game() {
@@ -43,10 +52,14 @@ const bool Game::isRunning() {
     return window.isOpen();
 }
 
-const sf::RenderWindow& Game::getWindow() {
+void Game::switchState(std::shared_ptr<State> newState) {
+    currentState = newState;
+}
+
+sf::RenderWindow& Game::getWindow() {
     return window;
 }
 
-void Game::switchState(std::shared_ptr<State> newState) {
-    currentState = newState;
+const sf::Font& Game::getFont() {
+    return font;
 }
