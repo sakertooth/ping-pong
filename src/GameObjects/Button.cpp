@@ -1,10 +1,56 @@
 #include "Button.hpp"
 #include "../Game.hpp"
 #include <iostream>
+#include <cmath>
+
+void Button::init() {
+    setRectColor(sf::Color::Black);
+    setHoverColor(sf::Color::White);
+    text.setFont(Game::getInstance().getFont());
+}
 
 void Button::update(const sf::Time& deltaTime) {
     const auto& mousePos = sf::Mouse::getPosition(Game::getInstance().getWindow());
-    std::cout << mousePos.x << ":" << mousePos.y << '\n';
+    if (rect.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
+        rect.setFillColor(hoverColor);
+        text.setFillColor(rectColor);
+
+        const auto& clicked = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+        if (!isMouseDown && clicked) {
+            isMouseDown = true;
+            if (onClickFn) {
+                onClickFn();
+            }
+        }
+        else if (!clicked) {
+            isMouseDown = false;
+        }
+    }
+    else {
+        rect.setFillColor(rectColor);
+        text.setFillColor(hoverColor);
+    }
+    
+}
+
+void Button::onClick(const std::function<void()>& fn) {
+    onClickFn = fn;
+}
+
+void Button::setPosition(float x, float y) {   
+    rect.setOrigin(std::round(rect.getLocalBounds().width / 2.0f), std::round(rect.getLocalBounds().height / 2.0f));
+    rect.setPosition(x, y);
+
+    text.setOrigin(std::round(text.getLocalBounds().width / 2.0f), std::round(rect.getLocalBounds().height / 2.0f));
+    text.setPosition(x, y);
+}
+
+void Button::setText(const std::string& str) {
+    text.setString(str);
+
+    float rectWidth = text.getLocalBounds().width + 15;
+    float rectHeight = text.getLocalBounds().height + 15;
+    rect.setSize(sf::Vector2f(rectWidth, rectHeight));
 }
 
 void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -12,10 +58,10 @@ void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     target.draw(text, states);
 }
 
-sf::RectangleShape& Button::getRect() {
-    return rect;
+void Button::setRectColor(const sf::Color& color) {
+    rectColor = color;
 }
 
-sf::Text& Button::getText() {
-    return text;
+void Button::setHoverColor(const sf::Color& color) {
+    hoverColor = color;
 }
