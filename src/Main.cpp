@@ -1,16 +1,12 @@
-#include "Game.hpp"
 #include <iostream>
+#include "Game.hpp"
 
-int main()
-{
-	auto &game = Pong::Game::getInstance();
-	auto deltaClock = sf::Clock::Clock();
-	game.init();
+int main() {
+    auto &game = Game::getInstance();
+    auto clock = sf::Clock::Clock();
 
-	while (game.isRunning())
-	{
-		game.handleEvent();
-		game.update(deltaClock.restart());
-		game.draw();
-	}
+    while (game.isRunning()) {
+        game.update(clock.getElapsedTime());
+        game.draw();
+    }
 }
