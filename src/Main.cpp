@@ -3,7 +3,7 @@
 
 int main() {
     auto &game = Game::getInstance();
-    auto clock = sf::Clock::Clock();
+    auto clock = sf::Clock();
 
     game.init();
     while (game.isRunning()) {
