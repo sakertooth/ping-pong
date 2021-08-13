@@ -53,6 +53,21 @@ void MainMenuState::update(const sf::Time& deltaTime) {
     exitButton.update(deltaTime);
 
     backgroundBall.update(deltaTime);
+    
+    const auto &window = Game::getInstance().getWindow();
+    const auto ballNormalizedVelX = std::cos(backgroundBall.getAngle());
+
+    if (backgroundPaddleLeft.getPosition().y + backgroundPaddleLeft.getLocalBounds().height / 2.0f < window.getSize().y &&
+        backgroundBall.getPosition().y - backgroundPaddleLeft.getLocalBounds().height / 2.0f > 0 &&
+        ballNormalizedVelX < 0) {
+        backgroundPaddleLeft.move(0, std::sin(backgroundBall.getAngle()) * backgroundBall.getSpeed() * deltaTime.asSeconds());
+    }
+
+    if (backgroundPaddleRight.getPosition().y + backgroundPaddleRight.getLocalBounds().height / 2.0f < window.getSize().y &&
+        backgroundBall.getPosition().y - backgroundPaddleRight.getLocalBounds().height / 2.0f > 0 &&
+        ballNormalizedVelX > 0) {
+        backgroundPaddleRight.move(0, std::sin(backgroundBall.getAngle()) * backgroundBall.getSpeed() * deltaTime.asSeconds());
+    }
 }
 
 void MainMenuState::draw(sf::RenderTarget& target, sf::RenderStates states) const {

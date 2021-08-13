@@ -7,6 +7,7 @@ public:
 
     int getSpeed();
     int getAngle();
+    const sf::Vector2f& getPosition() const;
     
     void setSpeed(int newSpeed);
     void setAngle(int newAngle);
