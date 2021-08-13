@@ -9,9 +9,12 @@ add_executable(pingpong WIN32
     src/States/MainMenuState.cpp)
 
 if(WIN32)
-    set(SFML_STATIC_LIBRARIES TRUE)
     find_package(SFML COMPONENTS main graphics audio REQUIRED)
     target_link_libraries(pingpong PUBLIC sfml-main sfml-graphics sfml-audio)
+
+    add_custom_command(TARGET pingpong POST_BUILD
+                        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:pingpong> $<TARGET_FILE_DIR:pingpong>
+                        COMMAND_EXPAND_LISTS)
 elseif(UNIX)
     find_package(SFML COMPONENTS graphics audio REQUIRED)
     target_link_libraries(pingpong PUBLIC sfml-graphics sfml-audio)
