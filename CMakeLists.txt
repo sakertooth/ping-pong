@@ -5,6 +5,7 @@ add_executable(pingpong WIN32
     src/Main.cpp
     src/Game.cpp
     src/GameObjects/Button.cpp
+    src/GameObjects/Ball.cpp
     src/States/MainMenuState.cpp)
 
 if(WIN32)

@@ -26,14 +26,33 @@ void MainMenuState::init() {
 
     exitButton.init();
     exitButton.setText("Exit");
-    exitButton.onClick([]() { std::exit(0); });
+    exitButton.onClick([]() { Game::getInstance().stop(); });
     exitButton.setPosition(xPos, yPos + 50.0f);
+
+    backgroundPaddleLeft.setSize({5, 75});
+    backgroundPaddleLeft.setOrigin(backgroundPaddleLeft.getLocalBounds().width / 2.0f, backgroundPaddleLeft.getLocalBounds().height / 2.0f);
+    backgroundPaddleLeft.setPosition(15, yPos);
+    backgroundPaddleLeft.setFillColor(sf::Color::White);
+
+    backgroundPaddleRight.setSize(backgroundPaddleLeft.getSize());
+    backgroundPaddleRight.setOrigin(backgroundPaddleLeft.getOrigin());
+    backgroundPaddleRight.setPosition(window.getSize().x - 15.0f, yPos);
+    backgroundPaddleRight.setFillColor(sf::Color::White);
+    
+    if (!music.openFromFile("assets/artblock.ogg")) {
+        std::cout << "could not load assets/artblock.ogg";
+        Game::getInstance().stop();
+    }
+
+    music.play();
 }
 
 void MainMenuState::update(const sf::Time& deltaTime) {
     onePlayerButton.update(deltaTime);
     twoPlayerButton.update(deltaTime);
     exitButton.update(deltaTime);
+
+    backgroundBall.update(deltaTime);
 }
 
 void MainMenuState::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -41,4 +60,8 @@ void MainMenuState::draw(sf::RenderTarget& target, sf::RenderStates states) cons
     target.draw(twoPlayerButton, states);
     target.draw(exitButton, states);
     target.draw(title, states);
+
+    target.draw(backgroundPaddleLeft, states);
+    target.draw(backgroundPaddleRight, states);
+    target.draw(backgroundBall, states);
 }
