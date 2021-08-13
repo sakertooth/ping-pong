@@ -16,7 +16,6 @@ elseif(UNIX)
     target_link_libraries(pingpong PUBLIC sfml-graphics sfml-audio)
 endif()
 
-
 add_custom_command(TARGET pingpong POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
                        ${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:pingpong>/assets)
