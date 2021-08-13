@@ -7,7 +7,7 @@ int main() {
 
     game.init();
     while (game.isRunning()) {
-        game.update(clock.getElapsedTime());
+        game.update(clock.restart());
         game.draw();
     }
 }
