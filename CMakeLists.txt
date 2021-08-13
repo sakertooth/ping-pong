@@ -7,9 +7,15 @@ add_executable(pingpong WIN32
     src/GameObjects/Button.cpp
     src/States/MainMenuState.cpp)
 
-set(SFML_STATIC_LIBRARIES TRUE)
-find_package(SFML COMPONENTS main graphics audio REQUIRED)
-target_link_libraries(pingpong PUBLIC sfml-main sfml-graphics sfml-audio)
+if(WIN32)
+    set(SFML_STATIC_LIBRARIES TRUE)
+    find_package(SFML COMPONENTS main graphics audio REQUIRED)
+    target_link_libraries(pingpong PUBLIC sfml-main sfml-graphics sfml-audio)
+elseif(UNIX)
+    find_package(SFML COMPONENTS graphics audio REQUIRED)
+    target_link_libraries(pingpong PUBLIC sfml-graphics sfml-audio)
+endif()
+
 
 add_custom_command(TARGET pingpong POST_BUILD
                    COMMAND ${CMAKE_COMMAND} -E copy_directory
