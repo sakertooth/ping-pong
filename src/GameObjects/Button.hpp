@@ -5,8 +5,7 @@
 
 class Button : public GameObject {
 public:
-
-    void init() override;
+    void init();
     
     virtual void update(const sf::Time& deltaTime) override;
     void onClick(const std::function<void()>& fn);

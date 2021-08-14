@@ -11,13 +11,13 @@ public:
     
     void setSpeed(int newSpeed);
     void setAngle(int newAngle);
+    const sf::CircleShape& getCircle() const;
 
     virtual void update(const sf::Time& deltaTime) override;
-    virtual void init() override;
 private:
     int speed;
     int angle;
-    sf::CircleShape ball;
+    sf::CircleShape circle;
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

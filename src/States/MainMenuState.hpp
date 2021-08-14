@@ -3,6 +3,7 @@
 #include "State.hpp"
 #include "../GameObjects/Button.hpp"
 #include "../GameObjects/Ball.hpp"
+#include "../GameObjects/Paddle.hpp"
 
 class MainMenuState : public State {
 public:
@@ -17,8 +18,8 @@ private:
     sf::Text title;
     sf::Music music;
 
-    sf::RectangleShape backgroundPaddleLeft;
-    sf::RectangleShape backgroundPaddleRight;
+    Paddle backgroundPaddleLeft;
+    Paddle backgroundPaddleRight;
     Ball backgroundBall;
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

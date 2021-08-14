@@ -1,31 +1,31 @@
 #include "Ball.hpp"
 #include "../Game.hpp"
 #include <cmath>
+#include <iostream>
 
 Ball::Ball() : speed(500), angle(45) {
-    ball.setRadius(5);
-    ball.setPosition(5, 5);
-    ball.setOrigin(ball.getLocalBounds().width / 2.0f, ball.getLocalBounds().height / 2.0f);
-    ball.setFillColor(sf::Color::White);
+    circle.setRadius(5);
+    circle.setPosition(5, 5);
+    circle.setOrigin(circle.getLocalBounds().width / 2.0f, circle.getLocalBounds().height / 2.0f);
+    circle.setFillColor(sf::Color::White);
 }
 
-void Ball::init() {}
-
 void Ball::update(const sf::Time& deltaTime) {
-    const auto& deltaTimeSeconds = deltaTime.asSeconds();
     const auto& window = Game::getInstance().getWindow();
-    const auto& ballTop = std::round(ball.getPosition().y - ball.getRadius());
-    const auto& ballBottom = std::round(ball.getPosition().y + ball.getRadius());
-
-    if (ballTop > window.getSize().y || ballBottom < 0) {
-        angle = 180;
+    const auto deltaTimeSeconds = deltaTime.asSeconds();
+    const auto ballTop = circle.getPosition().y - circle.getRadius();
+    const auto ballBottom = circle.getPosition().y + circle.getRadius();
+    
+    if (ballTop > static_cast<float>(window.getSize().y) || ballBottom < 0.0f) {
+        setAngle(angle + 180);
     }
 
-    ball.move(std::cos(angle) * speed * deltaTimeSeconds, std::sin(angle) * speed * deltaTimeSeconds);
+    circle.move(static_cast<float>(std::cos(angle)) * speed * deltaTimeSeconds, 
+                static_cast<float>(std::sin(angle)) * speed * deltaTimeSeconds);
 }
 
 void Ball::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-    target.draw(ball, states);
+    target.draw(circle, states);
 }
 
 int Ball::getSpeed() {
@@ -36,8 +36,8 @@ int Ball::getAngle() {
     return angle;
 }
 
-const sf::Vector2f& Ball::getPosition() const {
-    return ball.getPosition();
+const sf::CircleShape& Ball::getCircle() const {
+    return circle;
 }
 
 void Ball::setSpeed(int newSpeed) {
@@ -45,6 +45,6 @@ void Ball::setSpeed(int newSpeed) {
 }
  
 void Ball::setAngle(int newAngle) {
-    angle = newAngle;
+    angle = newAngle % 360;
 }
 

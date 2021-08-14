@@ -29,21 +29,15 @@ void MainMenuState::init() {
     exitButton.onClick([]() { Game::getInstance().stop(); });
     exitButton.setPosition(xPos, yPos + 50.0f);
 
-    backgroundPaddleLeft.setSize({5, 75});
-    backgroundPaddleLeft.setOrigin(backgroundPaddleLeft.getLocalBounds().width / 2.0f, backgroundPaddleLeft.getLocalBounds().height / 2.0f);
-    backgroundPaddleLeft.setPosition(15, yPos);
-    backgroundPaddleLeft.setFillColor(sf::Color::White);
+    backgroundPaddleLeft.init(sf::Vector2f(15, yPos), Paddle::PaddleOrientation::LEFT, &backgroundBall);
+    backgroundPaddleRight.init(sf::Vector2f(window.getSize().x - 15.0f, yPos), Paddle::PaddleOrientation::RIGHT, &backgroundBall);
 
-    backgroundPaddleRight.setSize(backgroundPaddleLeft.getSize());
-    backgroundPaddleRight.setOrigin(backgroundPaddleLeft.getOrigin());
-    backgroundPaddleRight.setPosition(window.getSize().x - 15.0f, yPos);
-    backgroundPaddleRight.setFillColor(sf::Color::White);
-    
     if (!music.openFromFile("assets/artblock.ogg")) {
         std::cout << "could not load assets/artblock.ogg";
         Game::getInstance().stop();
     }
 
+    music.setLoop(true);
     music.play();
 }
 
@@ -51,29 +45,42 @@ void MainMenuState::update(const sf::Time& deltaTime) {
     onePlayerButton.update(deltaTime);
     twoPlayerButton.update(deltaTime);
     exitButton.update(deltaTime);
-    
-    const auto &window = Game::getInstance().getWindow();
-    const auto ballAngle = backgroundBall.getAngle();
-    const auto ballSpeed = backgroundBall.getSpeed();
-    const auto ballComponentX = std::cos(ballAngle);
-    const auto ballComponentY = std::sin(backgroundBall.getAngle());
-
-    if (backgroundPaddleLeft.getPosition().y + backgroundPaddleLeft.getLocalBounds().height / 2.0f < window.getSize().y &&
-        backgroundPaddleLeft.getPosition().y - backgroundPaddleLeft.getLocalBounds().height / 2.0f > 0 &&
-        ballComponentX < 0) {
-
-    }
-
-    const auto backgroundPaddleRightBottom = std::round(backgroundPaddleRight.getPosition().y + backgroundPaddleRight.getLocalBounds().height / 2.0f);
-    const auto backgroundPaddleRightTop = std::round(backgroundPaddleRight.getPosition().y - backgroundPaddleRight.getLocalBounds().height / 2.0f);
-    if (backgroundPaddleRightBottom < window.getSize().y && backgroundPaddleRightTop > 0) {
-        const auto directionY = ballComponentY > 0 ? 1 : -1;
-
-        std::cout << backgroundBall.getAngle() << '\n';
-        backgroundPaddleRight.move(0, directionY * ballSpeed * deltaTime.asSeconds());
-    }
-
     backgroundBall.update(deltaTime);
+    backgroundPaddleLeft.update(deltaTime);
+    backgroundPaddleRight.update(deltaTime);
+
+    const auto& window = Game::getInstance().getWindow();
+    const auto ballTop = backgroundBall.getCircle().getPosition().y - backgroundBall.getCircle().getRadius();
+    const auto ballBottom = backgroundBall.getCircle().getPosition().y + backgroundBall.getCircle().getRadius();
+    const auto ballDirectionX = std::cos(backgroundBall.getAngle()) > 0 ? 1 : -1;
+    const auto ballDirectionY = std::cos(backgroundBall.getAngle()) > 0 ? 1 : -1;
+
+    const auto backgroundPaddleLeftTop = backgroundPaddleLeft.getRect().getPosition().y -
+                                            backgroundPaddleLeft.getRect().getLocalBounds().height / 2.0f;
+
+    const auto backgroundPaddleLeftBottom = backgroundPaddleLeft.getRect().getPosition().y +
+                                                backgroundPaddleLeft.getRect().getLocalBounds().height / 2.0f;
+
+    if (backgroundPaddleLeftBottom < ballBottom && ballDirectionX == -1) {
+        backgroundPaddleLeft.moveDown(deltaTime);
+    }
+    else if (backgroundPaddleLeftTop > ballBottom && ballDirectionX == -1) {
+        backgroundPaddleLeft.moveUp(deltaTime);
+    }
+
+    const auto backgroundPaddleRightTop = backgroundPaddleRight.getRect().getPosition().y -
+                                            backgroundPaddleRight.getRect().getLocalBounds().height / 2.0f;
+
+    const auto backgroundPaddleRightBottom = backgroundPaddleRight.getRect().getPosition().y +
+                                                backgroundPaddleRight.getRect().getLocalBounds().height / 2.0f;
+
+    if (backgroundPaddleRightBottom < ballBottom && ballDirectionX == 1) {
+        backgroundPaddleRight.moveDown(deltaTime);
+    }
+    else if (backgroundPaddleRightTop > ballTop && ballDirectionX == 1) {
+        backgroundPaddleRight.moveUp(deltaTime);
+    }
+
 }
 
 void MainMenuState::draw(sf::RenderTarget& target, sf::RenderStates states) const {
