@@ -51,23 +51,29 @@ void MainMenuState::update(const sf::Time& deltaTime) {
     onePlayerButton.update(deltaTime);
     twoPlayerButton.update(deltaTime);
     exitButton.update(deltaTime);
-
-    backgroundBall.update(deltaTime);
     
     const auto &window = Game::getInstance().getWindow();
-    const auto ballNormalizedVelX = std::cos(backgroundBall.getAngle());
+    const auto ballAngle = backgroundBall.getAngle();
+    const auto ballSpeed = backgroundBall.getSpeed();
+    const auto ballComponentX = std::cos(ballAngle);
+    const auto ballComponentY = std::sin(backgroundBall.getAngle());
 
     if (backgroundPaddleLeft.getPosition().y + backgroundPaddleLeft.getLocalBounds().height / 2.0f < window.getSize().y &&
-        backgroundBall.getPosition().y - backgroundPaddleLeft.getLocalBounds().height / 2.0f > 0 &&
-        ballNormalizedVelX < 0) {
-        backgroundPaddleLeft.move(0, std::sin(backgroundBall.getAngle()) * backgroundBall.getSpeed() * deltaTime.asSeconds());
+        backgroundPaddleLeft.getPosition().y - backgroundPaddleLeft.getLocalBounds().height / 2.0f > 0 &&
+        ballComponentX < 0) {
+
     }
 
-    if (backgroundPaddleRight.getPosition().y + backgroundPaddleRight.getLocalBounds().height / 2.0f < window.getSize().y &&
-        backgroundBall.getPosition().y - backgroundPaddleRight.getLocalBounds().height / 2.0f > 0 &&
-        ballNormalizedVelX > 0) {
-        backgroundPaddleRight.move(0, std::sin(backgroundBall.getAngle()) * backgroundBall.getSpeed() * deltaTime.asSeconds());
+    const auto backgroundPaddleRightBottom = std::round(backgroundPaddleRight.getPosition().y + backgroundPaddleRight.getLocalBounds().height / 2.0f);
+    const auto backgroundPaddleRightTop = std::round(backgroundPaddleRight.getPosition().y - backgroundPaddleRight.getLocalBounds().height / 2.0f);
+    if (backgroundPaddleRightBottom < window.getSize().y && backgroundPaddleRightTop > 0) {
+        const auto directionY = ballComponentY > 0 ? 1 : -1;
+
+        std::cout << backgroundBall.getAngle() << '\n';
+        backgroundPaddleRight.move(0, directionY * ballSpeed * deltaTime.asSeconds());
     }
+
+    backgroundBall.update(deltaTime);
 }
 
 void MainMenuState::draw(sf::RenderTarget& target, sf::RenderStates states) const {

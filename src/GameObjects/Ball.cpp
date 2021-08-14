@@ -13,14 +13,15 @@ void Ball::init() {}
 
 void Ball::update(const sf::Time& deltaTime) {
     const auto& deltaTimeSeconds = deltaTime.asSeconds();
-    ball.move(std::cos(angle) * speed * deltaTimeSeconds, std::sin(angle) * speed * deltaTimeSeconds);
-
     const auto& window = Game::getInstance().getWindow();
-    if (ball.getPosition().y + ball.getRadius() > window.getSize().y ||
-        ball.getPosition().y - ball.getRadius() / 2.0f < 0) {
-        
-        angle += 180;
+    const auto& ballTop = std::round(ball.getPosition().y - ball.getRadius());
+    const auto& ballBottom = std::round(ball.getPosition().y + ball.getRadius());
+
+    if (ballTop > window.getSize().y || ballBottom < 0) {
+        angle = 180;
     }
+
+    ball.move(std::cos(angle) * speed * deltaTimeSeconds, std::sin(angle) * speed * deltaTimeSeconds);
 }
 
 void Ball::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -44,14 +45,6 @@ void Ball::setSpeed(int newSpeed) {
 }
  
 void Ball::setAngle(int newAngle) {
-    if (newAngle < 0) {
-        angle = 360 - newAngle;
-    }
-    else if (newAngle > 360) {
-        angle = newAngle - 360;
-    }
-    else {
-        angle = newAngle;
-    }
+    angle = newAngle;
 }
 
