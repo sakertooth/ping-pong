@@ -12,10 +12,14 @@ add_executable(pingpong $<$<CONFIG:Release>:WIN32>
     src/GameObjects/Paddle.cpp
     src/States/MainMenuState.cpp)
 
-find_package(SFML COMPONENTS main graphics audio REQUIRED)
-target_link_libraries(pingpong PUBLIC sfml-main sfml-graphics sfml-audio)
+find_package(SFML COMPONENTS graphics audio REQUIRED)
+target_link_libraries(pingpong PUBLIC sfml-graphics sfml-audio)
+
 
 if(WIN32)
+    find_package(SFML COMPONENTS main REQUIRED)
+    target_link_libraries(pingpong PUBLIC sfml-main)
+
     add_custom_command(TARGET pingpong POST_BUILD
                         COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:pingpong> 
                         $<TARGET_RUNTIME_DLLS:pingpong>/../openal32.dll
