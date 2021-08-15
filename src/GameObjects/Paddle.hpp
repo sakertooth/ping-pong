@@ -12,7 +12,7 @@ public:
     };
 
     Paddle();
-    virtual void init(sf::Vector2f& position, PaddleOrientation orientation, Ball* activeBall);
+    virtual void init(const sf::Vector2f& position, PaddleOrientation orientation, Ball* activeBall);
     virtual void update(const sf::Time& deltaTime) override;
 
     const sf::RectangleShape& getRect() const;

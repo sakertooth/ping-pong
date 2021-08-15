@@ -7,7 +7,7 @@ Paddle::Paddle(): speed(500), activeBall(nullptr) {
     rect.setFillColor(sf::Color::White);
 }
 
-void Paddle::init(sf::Vector2f& position, PaddleOrientation orientation, Ball* activeBall) {
+void Paddle::init(const sf::Vector2f& position, PaddleOrientation orientation, Ball* activeBall) {
     rect.setPosition(position);
     this->activeBall = activeBall;
     this->orientation = orientation;
