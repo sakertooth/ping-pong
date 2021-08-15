@@ -18,9 +18,10 @@ void Ball::update(const sf::Time& deltaTime) {
     const auto ballTop = circle.getPosition().y - circle.getRadius();
     const auto ballBottom = circle.getPosition().y + circle.getRadius();
 
-    if (ballTop < 0.1f || ballBottom > static_cast<float>(window.getSize().y) - 0.1f) {
+    if (ballTop < 1.0f || ballBottom > static_cast<float>(window.getSize().y) - 1.0f) {
+        bool hitTop = ballTop < 1.0f ? true : false;
+        circle.setPosition(circle.getPosition().x, circle.getPosition().y + (hitTop ? 1.0f : -1.0f));
         angle = -angle;
-        // set the position to prevent it from being stuck
     }
 
     circle.move(static_cast<float>(std::cos(angle * M_PI/180)) * speed * deltaTimeSeconds, 

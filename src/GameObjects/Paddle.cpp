@@ -18,8 +18,6 @@ void Paddle::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 }
 
 void Paddle::update(const sf::Time& deltaTime) {
-    const auto ballAngle = activeBall->getAngle();
-    const auto ballSpeed = activeBall->getSpeed();
     const auto ballBounds = activeBall->getCircle().getGlobalBounds();
     const auto paddleBounds = rect.getGlobalBounds();
 
@@ -31,26 +29,37 @@ void Paddle::update(const sf::Time& deltaTime) {
     paddleIntersectionRect.width = 1;
     paddleIntersectionRect.height = paddleBounds.height;
 
+    float offsetX = 0;
+    float offsetY = 0;
+    
     switch(orientation) {
         case PaddleOrientation::LEFT:
             ballIntersectionRect.left = ballBounds.left;
             ballIntersectionRect.top = ballBounds.top;
             paddleIntersectionRect.left = paddleBounds.left + paddleBounds.width;
             paddleIntersectionRect.top = paddleBounds.top;
+
+            offsetX = 1.0f;
             break;
         case PaddleOrientation::RIGHT:
             ballIntersectionRect.left = ballBounds.left + ballBounds.width;
             ballIntersectionRect.top = ballBounds.top;
             paddleIntersectionRect.left = paddleBounds.left; 
             paddleIntersectionRect.top = paddleBounds.top; 
+            
+            offsetX = -1.0f;
             break;
         case PaddleOrientation::DOWN:
+
             break;
         case PaddleOrientation::UP:
             break;
     }
 
+    const auto ballAngle = activeBall->getAngle();
+    const auto ballPos = activeBall->getCircle().getPosition();
     if (paddleIntersectionRect.intersects(ballIntersectionRect)) {
+        activeBall->setPosition(ballPos.x + offsetX, ballPos.y + offsetY);
         activeBall->setAngle(ballAngle + 90);
     }
 }
