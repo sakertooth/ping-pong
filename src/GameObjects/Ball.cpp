@@ -6,10 +6,8 @@
 #include <iostream>
 #include <random>
 
-
 Ball::Ball() : speed(500), angle(45) {
     circle.setRadius(5);
-    circle.setPosition(5, 5);
     circle.setOrigin(circle.getLocalBounds().width / 2.0f, circle.getLocalBounds().height / 2.0f);
     circle.setFillColor(sf::Color::White);
 }
@@ -20,12 +18,13 @@ void Ball::update(const sf::Time& deltaTime) {
     const auto ballTop = circle.getPosition().y - circle.getRadius();
     const auto ballBottom = circle.getPosition().y + circle.getRadius();
 
-    if (ballTop < 1.0f || ballBottom > static_cast<float>(window.getSize().y) - 1.0f) {
+    if (ballTop < 0.1f || ballBottom > static_cast<float>(window.getSize().y) - 0.1f) {
         angle = -angle;
         // set the position to prevent it from being stuck
     }
 
-    circle.move(std::cos(angle * M_PI/180) * speed * deltaTimeSeconds, std::sin(angle * M_PI/180) * speed * deltaTimeSeconds);
+    circle.move(static_cast<float>(std::cos(angle * M_PI/180)) * speed * deltaTimeSeconds, 
+                static_cast<float>(std::sin(angle * M_PI/180)) * speed * deltaTimeSeconds);
 }
 
 void Ball::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -50,5 +49,9 @@ void Ball::setSpeed(int newSpeed) {
  
 void Ball::setAngle(int newAngle) {
     angle = newAngle % 360;
+}
+
+void Ball::setPosition(float x, float y) {
+    circle.setPosition(x, y);
 }
 

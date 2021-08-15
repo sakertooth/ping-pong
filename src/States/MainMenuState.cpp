@@ -5,7 +5,6 @@
 #include <iostream>
 #include <cmath>
 
-
 void MainMenuState::init() {
     const auto& window = Game::getInstance().getWindow();
     const auto xPos = window.getSize().x / 2.0f;
@@ -34,6 +33,7 @@ void MainMenuState::init() {
 
     backgroundPaddleLeft.init(sf::Vector2f(15, yPos), Paddle::PaddleOrientation::LEFT, &backgroundBall);
     backgroundPaddleRight.init(sf::Vector2f(window.getSize().x - 15.0f, yPos), Paddle::PaddleOrientation::RIGHT, &backgroundBall);
+    backgroundBall.setPosition(100, yPos);
 
     if (!music.openFromFile("assets/artblock.ogg")) {
         std::cout << "could not load assets/artblock.ogg";
@@ -86,12 +86,12 @@ void MainMenuState::update(const sf::Time& deltaTime) {
 }
 
 void MainMenuState::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+    target.draw(backgroundPaddleLeft, states);
+    target.draw(backgroundPaddleRight, states);
+    target.draw(backgroundBall, states);
+
     target.draw(onePlayerButton, states);
     target.draw(twoPlayerButton, states);
     target.draw(exitButton, states);
     target.draw(title, states);
-
-    target.draw(backgroundPaddleLeft, states);
-    target.draw(backgroundPaddleRight, states);
-    target.draw(backgroundBall, states);
 }

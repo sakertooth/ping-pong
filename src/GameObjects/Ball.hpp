@@ -11,6 +11,7 @@ public:
     
     void setSpeed(int newSpeed);
     void setAngle(int newAngle);
+    void setPosition(float x, float y);
     const sf::CircleShape& getCircle() const;
 
     virtual void update(const sf::Time& deltaTime) override;
