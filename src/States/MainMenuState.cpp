@@ -46,8 +46,8 @@ void MainMenuState::update(const sf::Time& deltaTime) {
     twoPlayerButton.update(deltaTime);
     exitButton.update(deltaTime);
     backgroundBall.update(deltaTime);
-    backgroundPaddleLeft.update(deltaTime);
     backgroundPaddleRight.update(deltaTime);
+    backgroundPaddleLeft.update(deltaTime);
 
     const auto& window = Game::getInstance().getWindow();
     const auto ballTop = backgroundBall.getCircle().getPosition().y - backgroundBall.getCircle().getRadius();
@@ -63,7 +63,7 @@ void MainMenuState::update(const sf::Time& deltaTime) {
     if (paddleLeftTop > ballTop && paddleLeftTop > 0.0f && ballDirectionX == -1) {     
         backgroundPaddleLeft.moveUp(deltaTime);
     }
-    else if (paddleLeftBottom < ballBottom && paddleLeftBottom > static_cast<float>(window.getSize().y) && ballDirectionX == -1) {
+    else if (paddleLeftBottom < ballBottom && paddleLeftBottom > window.getSize().y && ballDirectionX == -1) {
         backgroundPaddleLeft.moveDown(deltaTime);
     }
 
@@ -76,7 +76,7 @@ void MainMenuState::update(const sf::Time& deltaTime) {
     if (paddleRightTop > ballTop && paddleRightTop > 0.0f && ballDirectionX == 1) {     
         backgroundPaddleRight.moveUp(deltaTime);
     }
-    else if (paddleRightBottom < ballBottom && paddleRightBottom < static_cast<float>(window.getSize().y) && ballDirectionX == 1) {
+    else if (paddleRightBottom < ballBottom && paddleRightBottom < window.getSize().y && ballDirectionX == 1) {
         backgroundPaddleRight.moveDown(deltaTime);
     }
 }

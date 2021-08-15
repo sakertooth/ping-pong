@@ -16,12 +16,11 @@ void Ball::update(const sf::Time& deltaTime) {
     const auto ballTop = circle.getPosition().y - circle.getRadius();
     const auto ballBottom = circle.getPosition().y + circle.getRadius();
     
-    if (ballTop > static_cast<float>(window.getSize().y) || ballBottom < 0.0f) {
+    if (ballTop > window.getSize().y - 0.1f || ballBottom < 0.1f) {
         setAngle(angle + 180);
     }
 
-    circle.move(static_cast<float>(std::cos(angle)) * speed * deltaTimeSeconds, 
-                static_cast<float>(std::sin(angle)) * speed * deltaTimeSeconds);
+    circle.move(std::cos(angle) * speed * deltaTimeSeconds, std::sin(angle) * speed * deltaTimeSeconds);
 }
 
 void Ball::draw(sf::RenderTarget& target, sf::RenderStates states) const {
