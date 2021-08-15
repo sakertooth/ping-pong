@@ -1,8 +1,11 @@
+#define _USE_MATH_DEFINES
+
 #include "Ball.hpp"
 #include "../Game.hpp"
 #include <cmath>
 #include <iostream>
 #include <random>
+
 
 Ball::Ball() : speed(500), angle(45) {
     circle.setRadius(5);

@@ -1,7 +1,10 @@
+#define _USE_MATH_DEFINES
+
 #include "MainMenuState.hpp"
 #include "../Game.hpp"
 #include <iostream>
 #include <cmath>
+
 
 void MainMenuState::init() {
     const auto& window = Game::getInstance().getWindow();
