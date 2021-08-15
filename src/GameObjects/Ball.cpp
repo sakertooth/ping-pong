@@ -2,6 +2,7 @@
 #include "../Game.hpp"
 #include <cmath>
 #include <iostream>
+#include <random>
 
 Ball::Ball() : speed(500), angle(45) {
     circle.setRadius(5);
@@ -15,12 +16,13 @@ void Ball::update(const sf::Time& deltaTime) {
     const auto deltaTimeSeconds = deltaTime.asSeconds();
     const auto ballTop = circle.getPosition().y - circle.getRadius();
     const auto ballBottom = circle.getPosition().y + circle.getRadius();
-    
-    if (ballTop > window.getSize().y - 0.1f || ballBottom < 0.1f) {
-        setAngle(angle + 180);
+
+    if (ballTop < 1.0f || ballBottom > static_cast<float>(window.getSize().y) - 1.0f) {
+        angle = -angle;
+        // set the position to prevent it from being stuck
     }
 
-    circle.move(std::cos(angle) * speed * deltaTimeSeconds, std::sin(angle) * speed * deltaTimeSeconds);
+    circle.move(std::cos(angle * M_PI/180) * speed * deltaTimeSeconds, std::sin(angle * M_PI/180) * speed * deltaTimeSeconds);
 }
 
 void Ball::draw(sf::RenderTarget& target, sf::RenderStates states) const {

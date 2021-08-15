@@ -52,7 +52,7 @@ void MainMenuState::update(const sf::Time& deltaTime) {
     const auto& window = Game::getInstance().getWindow();
     const auto ballTop = backgroundBall.getCircle().getPosition().y - backgroundBall.getCircle().getRadius();
     const auto ballBottom = backgroundBall.getCircle().getPosition().y + backgroundBall.getCircle().getRadius();
-    const auto ballDirectionX = std::cos(backgroundBall.getAngle()) > 0 ? 1 : -1;
+    const auto ballDirectionX = std::cos(backgroundBall.getAngle() * M_PI/180) > 0 ? 1 : -1;
 
     const auto paddleLeftTop = backgroundPaddleLeft.getRect().getPosition().y -
                                             backgroundPaddleLeft.getRect().getLocalBounds().height / 2.0f;
@@ -63,7 +63,8 @@ void MainMenuState::update(const sf::Time& deltaTime) {
     if (paddleLeftTop > ballTop && paddleLeftTop > 0.0f && ballDirectionX == -1) {     
         backgroundPaddleLeft.moveUp(deltaTime);
     }
-    else if (paddleLeftBottom < ballBottom && paddleLeftBottom > window.getSize().y && ballDirectionX == -1) {
+    
+    if (paddleLeftBottom < ballBottom && paddleLeftBottom < window.getSize().y && ballDirectionX == -1) {
         backgroundPaddleLeft.moveDown(deltaTime);
     }
 
