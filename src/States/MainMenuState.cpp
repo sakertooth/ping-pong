@@ -83,6 +83,16 @@ void MainMenuState::update(const sf::Time& deltaTime) {
     else if (paddleRightBottom < ballBottom && paddleRightBottom < window.getSize().y && ballDirectionX == 1) {
         backgroundPaddleRight.moveDown(deltaTime);
     }
+
+    const auto ballPos = backgroundBall.getCircle().getPosition();
+    if (ballPos.x > static_cast<float>(window.getSize().x) ) {
+        const auto paddleRightPos = backgroundPaddleRight.getRect().getPosition();
+        backgroundBall.setPosition(paddleRightPos.x - 10.0f, paddleRightPos.y);
+    }
+    else if (ballPos.x < 0.0f) {
+        const auto paddleLeftPos = backgroundPaddleLeft.getRect().getPosition();
+        backgroundBall.setPosition(paddleLeftPos.x + 10.0f, paddleLeftPos.y);
+    }
 }
 
 void MainMenuState::draw(sf::RenderTarget& target, sf::RenderStates states) const {
