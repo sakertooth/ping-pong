@@ -1,14 +1,14 @@
 #include "Paddle.hpp"
 #include <iostream>
 
-Paddle::Paddle(): speed(500), activeBall(nullptr) {
-    rect.setSize({5, 75});
-    rect.setOrigin(rect.getLocalBounds().width / 2.0f, rect.getLocalBounds().height / 2.0f);
-    rect.setFillColor(sf::Color::White);
-}
+Paddle::Paddle(): speed(500), activeBall(nullptr) {}
 
-void Paddle::init(const sf::Vector2f& position, PaddleOrientation orientation, Ball* activeBall) {
+void Paddle::init(const sf::Vector2f& position, const sf::Vector2f& size, PaddleOrientation orientation, Ball* activeBall) {
+    rect.setSize(size);
     rect.setPosition(position);
+    rect.setFillColor(sf::Color::White);
+    rect.setOrigin(rect.getLocalBounds().width / 2.0f, rect.getLocalBounds().height / 2.0f);
+
     this->activeBall = activeBall;
     this->orientation = orientation;
 }
@@ -22,12 +22,7 @@ void Paddle::update(const sf::Time& deltaTime) {
     const auto paddleBounds = rect.getGlobalBounds();
 
     sf::FloatRect ballIntersectionRect;
-    ballIntersectionRect.width = 1;
-    ballIntersectionRect.height = ballBounds.height;
-
     sf::FloatRect paddleIntersectionRect;
-    paddleIntersectionRect.width = 1;
-    paddleIntersectionRect.height = paddleBounds.height;
 
     float offsetX = 0;
     float offsetY = 0;
@@ -36,36 +31,70 @@ void Paddle::update(const sf::Time& deltaTime) {
         case PaddleOrientation::LEFT:
             ballIntersectionRect.left = ballBounds.left;
             ballIntersectionRect.top = ballBounds.top;
+            ballIntersectionRect.height = ballBounds.height;
+            ballIntersectionRect.width = 1;
+
             paddleIntersectionRect.left = paddleBounds.left + paddleBounds.width;
             paddleIntersectionRect.top = paddleBounds.top;
+            paddleIntersectionRect.height = paddleBounds.height;
+            paddleIntersectionRect.width = 1;
 
             offsetX = 1.0f;
             break;
         case PaddleOrientation::RIGHT:
             ballIntersectionRect.left = ballBounds.left + ballBounds.width;
             ballIntersectionRect.top = ballBounds.top;
-            paddleIntersectionRect.left = paddleBounds.left; 
-            paddleIntersectionRect.top = paddleBounds.top; 
+            ballIntersectionRect.width = 1;
+            ballIntersectionRect.height = ballBounds.height;
             
+            paddleIntersectionRect.left = paddleBounds.left; 
+            paddleIntersectionRect.top = paddleBounds.top;
+            paddleIntersectionRect.width = 1;
+            paddleIntersectionRect.height = paddleBounds.height;
+
             offsetX = -1.0f;
             break;
         case PaddleOrientation::DOWN:
+            ballIntersectionRect.left = ballBounds.left;
+            ballIntersectionRect.top = ballBounds.top + ballBounds.height;
+            ballIntersectionRect.width = ballBounds.width;
+            ballIntersectionRect.height = 1;
 
-            break;
-        case PaddleOrientation::UP:
+            paddleIntersectionRect.left = paddleBounds.left;
+            paddleIntersectionRect.top = paddleBounds.top;
+            paddleIntersectionRect.width = paddleBounds.width;
+            paddleIntersectionRect.height = 1;
+
+            offsetY = -1.0f;
             break;
     }
 
     const auto ballAngle = activeBall->getAngle();
     const auto ballPos = activeBall->getCircle().getPosition();
     if (paddleIntersectionRect.intersects(ballIntersectionRect)) {
-        activeBall->setPosition(ballPos.x + offsetX, ballPos.y + offsetY);
-        activeBall->setAngle(ballAngle + 90);
+        activeBall->getCircle().setPosition(ballPos.x + offsetX, ballPos.y + offsetY);
+
+        switch(orientation) {
+            case Paddle::PaddleOrientation::LEFT:
+            case Paddle::PaddleOrientation::RIGHT:
+                activeBall->reflect(Ball::Axis::Y);
+                break;
+            case Paddle::PaddleOrientation::DOWN:
+                activeBall->reflect(Ball::Axis::X);
+        }
     }
 }
 
-const sf::RectangleShape& Paddle::getRect() const {
+int Paddle::getSpeed() {
+    return speed;
+}
+
+sf::RectangleShape& Paddle::getRect() {
     return rect;
+}
+
+Paddle::PaddleOrientation Paddle::getOrientation() {
+    return orientation;
 }
 
 void Paddle::moveUp(const sf::Time& deltaTime) {
@@ -74,4 +103,12 @@ void Paddle::moveUp(const sf::Time& deltaTime) {
 
 void Paddle::moveDown(const sf::Time& deltaTime) {
     rect.move(0, speed * deltaTime.asSeconds());
+}
+
+void Paddle::moveLeft(const sf::Time& deltaTime) {
+    rect.move(-speed * deltaTime.asSeconds(), 0);
+}
+
+void Paddle::moveRight(const sf::Time& deltaTime) {
+    rect.move(speed * deltaTime.asSeconds(), 0);
 }

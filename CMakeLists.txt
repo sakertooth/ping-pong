@@ -10,11 +10,12 @@ add_executable(pingpong $<$<CONFIG:Release>:WIN32>
     src/GameObjects/Button.cpp
     src/GameObjects/Ball.cpp
     src/GameObjects/Paddle.cpp
-    src/States/MainMenuState.cpp)
+    src/States/MainMenuState.cpp
+    src/States/SpacebarState.cpp
+    src/States/OnePlayerState.cpp)
 
 find_package(SFML COMPONENTS graphics audio REQUIRED)
 target_link_libraries(pingpong PUBLIC sfml-graphics sfml-audio)
-
 
 if(WIN32)
     find_package(SFML COMPONENTS main REQUIRED)

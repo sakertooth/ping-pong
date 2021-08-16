@@ -1,6 +1,8 @@
 #define _USE_MATH_DEFINES
 
 #include "MainMenuState.hpp"
+#include "SpacebarState.hpp"
+#include "OnePlayerState.hpp"
 #include "../Game.hpp"
 #include <iostream>
 #include <cmath>
@@ -18,7 +20,12 @@ void MainMenuState::init() {
 
     onePlayerButton.init();
     onePlayerButton.setText("One Player");
-    onePlayerButton.onClick([]() { std::cout << "clicked\n"; });
+    onePlayerButton.onClick([&]() {
+        music.stop();
+        auto onePlayerState = std::make_shared<OnePlayerState>();
+        auto spacebarState = std::make_shared<SpacebarState>(onePlayerState);
+        Game::getInstance().switchState(spacebarState);
+    });
     onePlayerButton.setPosition(xPos, yPos - 50.0f);
 
     twoPlayerButton.init();
@@ -31,9 +38,18 @@ void MainMenuState::init() {
     exitButton.onClick([]() { Game::getInstance().stop(); });
     exitButton.setPosition(xPos, yPos + 50.0f);
 
-    backgroundPaddleLeft.init(sf::Vector2f(15, yPos), Paddle::PaddleOrientation::LEFT, &backgroundBall);
-    backgroundPaddleRight.init(sf::Vector2f(window.getSize().x - 15.0f, yPos), Paddle::PaddleOrientation::RIGHT, &backgroundBall);
-    backgroundBall.setPosition(100, yPos);
+    backgroundPaddleLeft.init(sf::Vector2f(15, yPos),
+                                sf::Vector2f(5, 75), 
+                                Paddle::PaddleOrientation::LEFT, 
+                                &backgroundBall);
+
+    backgroundPaddleRight.init(sf::Vector2f(window.getSize().x - 15.0f, yPos), 
+                                sf::Vector2f(5, 75), 
+                                Paddle::PaddleOrientation::RIGHT, 
+                                &backgroundBall);
+
+    backgroundBall.setAngle(45);
+    backgroundBall.getCircle().setPosition(100, yPos);
 
     if (!music.openFromFile("assets/artblock.ogg")) {
         std::cout << "could not load assets/artblock.ogg";
@@ -57,13 +73,14 @@ void MainMenuState::update(const sf::Time& deltaTime) {
     const auto ballBottom = backgroundBall.getCircle().getPosition().y + backgroundBall.getCircle().getRadius();
     const auto ballDirectionX = std::cos(backgroundBall.getAngle() * M_PI/180) > 0 ? 1 : -1;
 
+    //Move paddles accordingly
     const auto paddleLeftTop = backgroundPaddleLeft.getRect().getPosition().y -
                                             backgroundPaddleLeft.getRect().getLocalBounds().height / 2.0f;
 
     const auto paddleLeftBottom = backgroundPaddleLeft.getRect().getPosition().y +
                                                 backgroundPaddleLeft.getRect().getLocalBounds().height / 2.0f;
 
-    if (paddleLeftTop > ballTop && paddleLeftTop > 0.0f && ballDirectionX == -1) {     
+    if (paddleLeftTop > ballTop && paddleLeftTop > 0.0f && ballDirectionX == -1) {
         backgroundPaddleLeft.moveUp(deltaTime);
     }
     
@@ -84,14 +101,24 @@ void MainMenuState::update(const sf::Time& deltaTime) {
         backgroundPaddleRight.moveDown(deltaTime);
     }
 
+    //Handle collision with the ball and the window
+    bool hitTop = ballTop < 0.1f;
+    bool hitBottom = ballBottom > static_cast<float>(window.getSize().y) - 1.0f;
+    if (hitTop || hitBottom) {
+        backgroundBall.reflect(Ball::Axis::X);
+        backgroundBall.getCircle().setPosition(backgroundBall.getCircle().getPosition().x,
+                                                backgroundBall.getCircle().getPosition().y + (hitTop ? 1.0f : -1.0f));
+    }
+
+    //Bring ball back if out of bounds
     const auto ballPos = backgroundBall.getCircle().getPosition();
-    if (ballPos.x > static_cast<float>(window.getSize().x) ) {
+    if (ballPos.x > static_cast<float>(window.getSize().x)) {
         const auto paddleRightPos = backgroundPaddleRight.getRect().getPosition();
-        backgroundBall.setPosition(paddleRightPos.x - 10.0f, paddleRightPos.y);
+        backgroundBall.getCircle().setPosition(paddleRightPos.x - 10.0f, paddleRightPos.y);
     }
     else if (ballPos.x < 0.0f) {
         const auto paddleLeftPos = backgroundPaddleLeft.getRect().getPosition();
-        backgroundBall.setPosition(paddleLeftPos.x + 10.0f, paddleLeftPos.y);
+        backgroundBall.getCircle().setPosition(paddleLeftPos.x + 10.0f, paddleLeftPos.y);
     }
 }
 
@@ -99,7 +126,6 @@ void MainMenuState::draw(sf::RenderTarget& target, sf::RenderStates states) cons
     target.draw(backgroundPaddleLeft, states);
     target.draw(backgroundPaddleRight, states);
     target.draw(backgroundBall, states);
-
     target.draw(onePlayerButton, states);
     target.draw(twoPlayerButton, states);
     target.draw(exitButton, states);

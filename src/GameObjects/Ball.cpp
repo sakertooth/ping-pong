@@ -6,24 +6,14 @@
 #include <iostream>
 #include <random>
 
-Ball::Ball() : speed(500), angle(45) {
+Ball::Ball() : speed(500), angle(0) {
     circle.setRadius(5);
     circle.setOrigin(circle.getLocalBounds().width / 2.0f, circle.getLocalBounds().height / 2.0f);
     circle.setFillColor(sf::Color::White);
 }
 
 void Ball::update(const sf::Time& deltaTime) {
-    const auto& window = Game::getInstance().getWindow();
     const auto deltaTimeSeconds = deltaTime.asSeconds();
-    const auto ballTop = circle.getPosition().y - circle.getRadius();
-    const auto ballBottom = circle.getPosition().y + circle.getRadius();
-
-    if (ballTop < 1.0f || ballBottom > static_cast<float>(window.getSize().y) - 1.0f) {
-        bool hitTop = ballTop < 1.0f ? true : false;
-        circle.setPosition(circle.getPosition().x, circle.getPosition().y + (hitTop ? 1.0f : -1.0f));
-        angle = -angle;
-    }
-
     circle.move(static_cast<float>(std::cos(angle * M_PI/180)) * speed * deltaTimeSeconds, 
                 static_cast<float>(std::sin(angle * M_PI/180)) * speed * deltaTimeSeconds);
 }
@@ -40,19 +30,28 @@ int Ball::getAngle() {
     return angle;
 }
 
-const sf::CircleShape& Ball::getCircle() const {
+sf::CircleShape& Ball::getCircle() {
     return circle;
 }
 
-void Ball::setSpeed(int newSpeed) {
+void Ball::setSpeed(const int newSpeed) {
     speed = newSpeed;
 }
  
-void Ball::setAngle(int newAngle) {
+void Ball::setAngle(const int newAngle) {
     angle = newAngle % 360;
 }
 
-void Ball::setPosition(float x, float y) {
-    circle.setPosition(x, y);
-}
+void Ball::reflect(Axis axis, float angleOffset) {
+    const auto ballX = std::cos(angle * M_PI/180);
+    const auto ballY = std::sin(angle * M_PI/180);
 
+    switch (axis) {
+        case Axis::X:
+            angle = std::atan2(-ballY, ballX) * 180/M_PI + angleOffset;
+            break;
+        case Axis::Y:
+            angle = std::atan2(ballY, -ballX) * 180/M_PI + angleOffset;
+            break;
+    }
+}

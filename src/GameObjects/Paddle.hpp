@@ -7,17 +7,21 @@ public:
     enum class PaddleOrientation {
         LEFT,
         RIGHT,
-        UP,
         DOWN
     };
 
     Paddle();
-    virtual void init(const sf::Vector2f& position, PaddleOrientation orientation, Ball* activeBall);
+    virtual void init(const sf::Vector2f& position, const sf::Vector2f& size, PaddleOrientation orientation, Ball* activeBall);
     virtual void update(const sf::Time& deltaTime) override;
 
-    const sf::RectangleShape& getRect() const;
-    void moveDown(const sf::Time& deltaTime);
+    int getSpeed();
+    sf::RectangleShape& getRect();
+    PaddleOrientation getOrientation();
+
     void moveUp(const sf::Time& deltaTime);
+    void moveDown(const sf::Time& deltaTime);
+    void moveLeft(const sf::Time& deltaTime);
+    void moveRight(const sf::Time& deltaTime);
 
 private:
     int speed;
