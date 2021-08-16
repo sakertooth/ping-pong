@@ -1,14 +1,15 @@
 #include "Paddle.hpp"
 #include <iostream>
 
-Paddle::Paddle(): speed(500), activeBall(nullptr) {}
+Paddle::Paddle() {}
 
-void Paddle::init(const sf::Vector2f& position, const sf::Vector2f& size, PaddleOrientation orientation, Ball* activeBall) {
+Paddle::Paddle(const sf::Vector2f& position, const sf::Vector2f& size, PaddleOrientation orientation, Ball* activeBall) {
     rect.setSize(size);
     rect.setPosition(position);
     rect.setFillColor(sf::Color::White);
     rect.setOrigin(rect.getLocalBounds().width / 2.0f, rect.getLocalBounds().height / 2.0f);
 
+    this->speed = 500;
     this->activeBall = activeBall;
     this->orientation = orientation;
 }

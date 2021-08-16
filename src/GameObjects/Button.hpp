@@ -1,13 +1,13 @@
 #pragma once
+#include "../Updatable.hpp"
 #include <SFML/Graphics.hpp>
-#include "GameObject.hpp"
 #include <functional>
 
-class Button : public GameObject {
+class Button : public Updatable {
 public:
-    void init();
+    Button();
     
-    virtual void update(const sf::Time& deltaTime) override;
+    void update(const sf::Time& deltaTime) override;
     void onClick(const std::function<void()>& fn);
 
     void setPosition(float x, float y);

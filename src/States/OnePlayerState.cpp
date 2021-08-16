@@ -3,11 +3,11 @@
 #include <cmath>
 #include <iostream>
 
-void OnePlayerState::init() {
+OnePlayerState::OnePlayerState() {
     const auto& window = Game::getInstance().getWindow();
-    paddle.init(sf::Vector2f(window.getSize().x / 2, window.getSize().y - 15.0f),
+    paddle = Paddle(sf::Vector2f(window.getSize().x / 2, window.getSize().y - 15.0f),
                 sf::Vector2f(75, 5), 
-                Paddle::PaddleOrientation::DOWN, 
+                Paddle::PaddleOrientation::DOWN,
                 &ball);
 
     ball.setAngle(315);
@@ -23,7 +23,7 @@ void OnePlayerState::update(const sf::Time &deltaTime) {
         && paddleBounds.left > 0.0f) {
 
         paddle.moveLeft(deltaTime);
-    }
+    }  
 
     const auto& window = Game::getInstance().getWindow();
     if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) 

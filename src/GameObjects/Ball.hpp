@@ -1,15 +1,15 @@
 #pragma once
-#include "GameObject.hpp"
+#include <SFML/Graphics.hpp>
 
-class Ball : public GameObject {
+class Ball : public sf::Drawable {
 public:
-
     enum class Axis {
         X,
         Y
     };
 
     Ball();
+    void update(const sf::Time& deltaTime);
 
     int getSpeed();
     int getAngle();
@@ -19,8 +19,6 @@ public:
     sf::CircleShape& getCircle();
 
     void reflect(Axis axis, float angleOffset = 0);
-
-    virtual void update(const sf::Time& deltaTime) override;
 private:
     int speed;
     int angle;

@@ -1,15 +1,13 @@
 #pragma once
-#include "State.hpp"
-#include "../Game.hpp"
+#include "../Updatable.hpp"
 #include <memory>
 
-class SpacebarState : public State {
+class SpacebarState : public Updatable {
 public:
-    SpacebarState(std::shared_ptr<State> nextState);
-    virtual void init() override;
+    SpacebarState(std::unique_ptr<Updatable> nextState);
     virtual void update(const sf::Time& deltaTime) override;
 private:
-    std::shared_ptr<State> nextState;
+    std::unique_ptr<Updatable> nextState;
     sf::Text spacebarContinueText;
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

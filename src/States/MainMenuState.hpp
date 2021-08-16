@@ -1,15 +1,14 @@
 #pragma once
 #include <SFML/Audio.hpp>
-#include "State.hpp"
+#include "../Updatable.hpp"
 #include "../GameObjects/Button.hpp"
 #include "../GameObjects/Ball.hpp"
 #include "../GameObjects/Paddle.hpp"
 
-class MainMenuState : public State {
+class MainMenuState : public Updatable {
 public:
-    virtual void init() override;
+    MainMenuState();
     virtual void update(const sf::Time& deltaTime) override;
-
 private:
     Button onePlayerButton;
     Button twoPlayerButton;

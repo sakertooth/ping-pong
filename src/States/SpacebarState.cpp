@@ -1,23 +1,25 @@
 #include "SpacebarState.hpp"
+#include "OnePlayerState.hpp"
+#include "../Updatable.hpp"
+#include "../Game.hpp"
 #include <cmath>
 
-SpacebarState::SpacebarState(std::shared_ptr<State> nextState) {
-    this->nextState = nextState;
+SpacebarState::SpacebarState(std::unique_ptr<Updatable> nextState) {
+    this->nextState = std::move(nextState);
+
     spacebarContinueText.setFont(Game::getInstance().getFont());
     spacebarContinueText.setString("Press spacebar to continue");
     spacebarContinueText.setOrigin(std::round(spacebarContinueText.getLocalBounds().width / 2.0f),
                                     std::round(spacebarContinueText.getLocalBounds().height / 2.0f));
     
     const auto& window = Game::getInstance().getWindow();
-    spacebarContinueText.setPosition(window.getSize().x / 2, window.getSize().y / 2);
+    spacebarContinueText.setPosition(static_cast<float>(window.getSize().x / 2), 
+                                    static_cast<float>(window.getSize().y / 2));
 }
 
-void SpacebarState::init() {}
-
 void SpacebarState::update(const sf::Time& deltaTime) {
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space)) {
-        nextState->init();
-        Game::getInstance().switchState(nextState);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && nextState) {
+        Game::getInstance().pushState(std::make_unique<OnePlayerState>());
     }
 }
 

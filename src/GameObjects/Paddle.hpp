@@ -1,8 +1,8 @@
 #pragma once
-#include "GameObject.hpp"
+#include "../Updatable.hpp"
 #include "Ball.hpp"
 
-class Paddle : public GameObject {
+class Paddle : public Updatable {
 public:
     enum class PaddleOrientation {
         LEFT,
@@ -11,8 +11,9 @@ public:
     };
 
     Paddle();
-    virtual void init(const sf::Vector2f& position, const sf::Vector2f& size, PaddleOrientation orientation, Ball* activeBall);
-    virtual void update(const sf::Time& deltaTime) override;
+    Paddle(const sf::Vector2f& position, const sf::Vector2f& size, PaddleOrientation orientation, Ball* activeBall);
+
+    void update(const sf::Time& deltaTime) override;
 
     int getSpeed();
     sf::RectangleShape& getRect();
@@ -29,5 +30,5 @@ private:
     Ball* activeBall;
     PaddleOrientation orientation;
 
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+    void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

@@ -1,12 +1,12 @@
 #pragma once
-#include "State.hpp"
+#include "../Updatable.hpp"
 #include "../GameObjects/Paddle.hpp"
 #include "../GameObjects/Ball.hpp"
 
-class OnePlayerState : public State {
+class OnePlayerState : public Updatable {
 public:
+    OnePlayerState();
     void update(const sf::Time& deltaTime) override;
-    void init() override;
 private:
     Paddle paddle;
     Ball ball;

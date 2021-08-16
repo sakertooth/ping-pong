@@ -7,7 +7,7 @@
 #include <iostream>
 #include <cmath>
 
-void MainMenuState::init() {
+MainMenuState::MainMenuState() {
     const auto& window = Game::getInstance().getWindow();
     const auto xPos = window.getSize().x / 2.0f;
     const auto yPos = window.getSize().y / 2.0f;
@@ -18,32 +18,30 @@ void MainMenuState::init() {
     title.setOrigin(std::round(title.getLocalBounds().width / 2.0f), std::round(title.getLocalBounds().height / 2.0f));
     title.setPosition(xPos, yPos - 150.0f);
 
-    onePlayerButton.init();
     onePlayerButton.setText("One Player");
     onePlayerButton.onClick([&]() {
         music.stop();
-        auto onePlayerState = std::make_shared<OnePlayerState>();
-        auto spacebarState = std::make_shared<SpacebarState>(onePlayerState);
-        Game::getInstance().switchState(spacebarState);
+
+        auto onePlayerState = std::make_unique<OnePlayerState>();
+        auto spacebarState = std::make_unique<SpacebarState>(std::move(onePlayerState));
+        Game::getInstance().pushState(std::move(spacebarState));
     });
     onePlayerButton.setPosition(xPos, yPos - 50.0f);
 
-    twoPlayerButton.init();
     twoPlayerButton.setText("Two Player");
     twoPlayerButton.onClick([]() { std::cout << "clicked\n"; });
     twoPlayerButton.setPosition(xPos, yPos);
 
-    exitButton.init();
     exitButton.setText("Exit");
     exitButton.onClick([]() { Game::getInstance().stop(); });
     exitButton.setPosition(xPos, yPos + 50.0f);
 
-    backgroundPaddleLeft.init(sf::Vector2f(15, yPos),
+    backgroundPaddleLeft = Paddle(sf::Vector2f(15, yPos),
                                 sf::Vector2f(5, 75), 
                                 Paddle::PaddleOrientation::LEFT, 
                                 &backgroundBall);
 
-    backgroundPaddleRight.init(sf::Vector2f(window.getSize().x - 15.0f, yPos), 
+    backgroundPaddleRight = Paddle(sf::Vector2f(window.getSize().x - 15.0f, yPos), 
                                 sf::Vector2f(5, 75), 
                                 Paddle::PaddleOrientation::RIGHT, 
                                 &backgroundBall);

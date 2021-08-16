@@ -3,7 +3,7 @@
 #include <iostream>
 #include <cmath>
 
-void Button::init() {
+Button::Button() {
     setRectColor(sf::Color::Black);
     setHoverColor(sf::Color::White);
     text.setFont(Game::getInstance().getFont());

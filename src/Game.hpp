@@ -1,7 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "States/State.hpp"
 #include <memory>
+#include <stack>
+#include "Updatable.hpp"
 
 class Game 
 {
@@ -9,22 +10,22 @@ public:
     Game();
     ~Game();
     
-    static Game& getInstance();
-    
+    void handleEvent();
     void update(const sf::Time& deltaTime);
-    void init();
     void draw();
     void stop();
 
+    void pushState(std::unique_ptr<Updatable> state);
+    void popState();
+
     const bool isRunning();
-    void switchState(std::shared_ptr<State> newState);
-    
-    sf::RenderWindow& getWindow();
+
+    static Game& getInstance();
+    const sf::RenderWindow& getWindow();
     const sf::Font& getFont();
 
 private:
     sf::RenderWindow window;
-    std::shared_ptr<State> currentState;
     sf::Font font;
+    std::stack<std::unique_ptr<Updatable>> states;    
 };
-
