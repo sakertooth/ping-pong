@@ -13,7 +13,7 @@ MainMenuState::MainMenuState() {
     const auto yPos = window.getSize().y / 2.0f;
 
     title.setFont(Game::getInstance().getFont());
-    title.setCharacterSize(45);
+    title.setCharacterSize(64);
     title.setString("Ping Pong");
     title.setOrigin(std::round(title.getLocalBounds().width / 2.0f), std::round(title.getLocalBounds().height / 2.0f));
     title.setPosition(xPos, yPos - 150.0f);
@@ -100,7 +100,7 @@ void MainMenuState::update(const sf::Time& deltaTime) {
     }
 
     //Handle collision with the ball and the window
-    bool hitTop = ballTop < 0.1f;
+    bool hitTop = ballTop < 1.0f;
     bool hitBottom = ballBottom > static_cast<float>(window.getSize().y) - 1.0f;
     if (hitTop || hitBottom) {
         backgroundBall.reflect(Ball::Axis::X);

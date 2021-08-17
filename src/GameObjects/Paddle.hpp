@@ -18,6 +18,7 @@ public:
     int getSpeed();
     sf::RectangleShape& getRect();
     PaddleOrientation getOrientation();
+    std::pair<sf::FloatRect, sf::FloatRect> getIntersectionRects();
 
     void moveUp(const sf::Time& deltaTime);
     void moveDown(const sf::Time& deltaTime);

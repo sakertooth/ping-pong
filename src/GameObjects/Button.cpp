@@ -7,6 +7,7 @@ Button::Button() {
     setRectColor(sf::Color::Black);
     setHoverColor(sf::Color::White);
     text.setFont(Game::getInstance().getFont());
+    text.setCharacterSize(32);
 }
 
 void Button::update(const sf::Time& deltaTime) {

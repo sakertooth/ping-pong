@@ -7,7 +7,11 @@ Game::Game() {
     if (!font.loadFromFile("assets/font.ttf")) {
         std::cout << "Game font could not be loaded.\n";
         return;
-    }    
+    }
+
+    sf::Image icon;
+    icon.loadFromFile("assets/icon.png");
+    window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 }
 
 Game::~Game() {
@@ -58,6 +62,17 @@ void Game::pushState(std::unique_ptr<Updatable> state) {
 void Game::popState() {
     states.pop();
 }
+
+void Game::clearAllStates() {
+    for (size_t i = 0; i < states.size(); ++i) {
+        states.pop();
+    }
+}
+
+void Game::playSound(SoundManager::SoundType soundType) {
+    soundManager.playSound(soundType);
+}
+
 
 const bool Game::isRunning() {
     return window.isOpen();

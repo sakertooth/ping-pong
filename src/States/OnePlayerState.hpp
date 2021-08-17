@@ -11,5 +11,11 @@ private:
     Paddle paddle;
     Ball ball;
 
+    sf::Text scoreboard;
+    int score;
+
+    sf::Text gameOverText;
+    bool gameOver;
+    
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

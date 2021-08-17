@@ -22,50 +22,21 @@ void Paddle::update(const sf::Time& deltaTime) {
     const auto ballBounds = activeBall->getCircle().getGlobalBounds();
     const auto paddleBounds = rect.getGlobalBounds();
 
-    sf::FloatRect ballIntersectionRect;
-    sf::FloatRect paddleIntersectionRect;
+    auto intersections = getIntersectionRects();
+    auto ballIntersectionRect = std::get<0>(intersections);
+    auto paddleIntersectionRect = std::get<1>(intersections);
 
     float offsetX = 0;
     float offsetY = 0;
     
     switch(orientation) {
         case PaddleOrientation::LEFT:
-            ballIntersectionRect.left = ballBounds.left;
-            ballIntersectionRect.top = ballBounds.top;
-            ballIntersectionRect.height = ballBounds.height;
-            ballIntersectionRect.width = 1;
-
-            paddleIntersectionRect.left = paddleBounds.left + paddleBounds.width;
-            paddleIntersectionRect.top = paddleBounds.top;
-            paddleIntersectionRect.height = paddleBounds.height;
-            paddleIntersectionRect.width = 1;
-
             offsetX = 1.0f;
             break;
         case PaddleOrientation::RIGHT:
-            ballIntersectionRect.left = ballBounds.left + ballBounds.width;
-            ballIntersectionRect.top = ballBounds.top;
-            ballIntersectionRect.width = 1;
-            ballIntersectionRect.height = ballBounds.height;
-            
-            paddleIntersectionRect.left = paddleBounds.left; 
-            paddleIntersectionRect.top = paddleBounds.top;
-            paddleIntersectionRect.width = 1;
-            paddleIntersectionRect.height = paddleBounds.height;
-
             offsetX = -1.0f;
             break;
         case PaddleOrientation::DOWN:
-            ballIntersectionRect.left = ballBounds.left;
-            ballIntersectionRect.top = ballBounds.top + ballBounds.height;
-            ballIntersectionRect.width = ballBounds.width;
-            ballIntersectionRect.height = 1;
-
-            paddleIntersectionRect.left = paddleBounds.left;
-            paddleIntersectionRect.top = paddleBounds.top;
-            paddleIntersectionRect.width = paddleBounds.width;
-            paddleIntersectionRect.height = 1;
-
             offsetY = -1.0f;
             break;
     }
@@ -96,6 +67,52 @@ sf::RectangleShape& Paddle::getRect() {
 
 Paddle::PaddleOrientation Paddle::getOrientation() {
     return orientation;
+}
+
+std::pair<sf::FloatRect, sf::FloatRect> Paddle::getIntersectionRects() {
+    const auto ballBounds = activeBall->getCircle().getGlobalBounds();
+    const auto paddleBounds = rect.getGlobalBounds();
+
+    sf::FloatRect ballIntersectionRect;
+    sf::FloatRect paddleIntersectionRect;
+
+    switch(orientation) {
+        case PaddleOrientation::LEFT:
+            ballIntersectionRect.left = ballBounds.left;
+            ballIntersectionRect.top = ballBounds.top;
+            ballIntersectionRect.height = ballBounds.height;
+            ballIntersectionRect.width = 1;
+
+            paddleIntersectionRect.left = paddleBounds.left + paddleBounds.width;
+            paddleIntersectionRect.top = paddleBounds.top;
+            paddleIntersectionRect.height = paddleBounds.height;
+            paddleIntersectionRect.width = 1;
+            break;
+        case PaddleOrientation::RIGHT:
+            ballIntersectionRect.left = ballBounds.left + ballBounds.width;
+            ballIntersectionRect.top = ballBounds.top;
+            ballIntersectionRect.width = 1;
+            ballIntersectionRect.height = ballBounds.height;
+            
+            paddleIntersectionRect.left = paddleBounds.left; 
+            paddleIntersectionRect.top = paddleBounds.top;
+            paddleIntersectionRect.width = 1;
+            paddleIntersectionRect.height = paddleBounds.height;
+            break;
+        case PaddleOrientation::DOWN:
+            ballIntersectionRect.left = ballBounds.left;
+            ballIntersectionRect.top = ballBounds.top + ballBounds.height;
+            ballIntersectionRect.width = ballBounds.width;
+            ballIntersectionRect.height = 1;
+
+            paddleIntersectionRect.left = paddleBounds.left;
+            paddleIntersectionRect.top = paddleBounds.top;
+            paddleIntersectionRect.width = paddleBounds.width;
+            paddleIntersectionRect.height = 1;
+            break;
+    }
+
+    return std::make_pair(ballIntersectionRect, paddleIntersectionRect);
 }
 
 void Paddle::moveUp(const sf::Time& deltaTime) {
