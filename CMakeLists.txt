@@ -8,7 +8,6 @@ add_executable(pingpong $<$<CONFIG:Release>:WIN32>
     src/Main.cpp
     src/Game.cpp
     src/SoundManager.cpp
-    src/Random.cpp
     src/GameObjects/Button.cpp
     src/GameObjects/Ball.cpp
     src/GameObjects/Paddle.cpp
