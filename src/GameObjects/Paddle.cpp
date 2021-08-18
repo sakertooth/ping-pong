@@ -1,6 +1,6 @@
 #include "Paddle.hpp"
-#include "../Random.hpp"
 #include <iostream>
+#include <cmath>
 
 Paddle::Paddle() {}
 
@@ -20,8 +20,9 @@ void Paddle::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 }
 
 void Paddle::update(const sf::Time& deltaTime) {
-    const auto ballBounds = activeBall->getCircle().getGlobalBounds();
-    const auto paddleBounds = rect.getGlobalBounds();
+    auto ballBounds = activeBall->getGlobalBounds();
+    auto paddleBounds = rect.getGlobalBounds();
+    auto ballRadius = activeBall->getRadius();
 
     auto intersections = getIntersectionRects();
     auto ballIntersectionRect = std::get<0>(intersections);
@@ -32,50 +33,73 @@ void Paddle::update(const sf::Time& deltaTime) {
     
     switch(orientation) {
         case PaddleOrientation::LEFT:
-            offsetX = 1.0f;
+            offsetX = ballRadius;
             break;
         case PaddleOrientation::RIGHT:
-            offsetX = -1.0f;
+            offsetX = -ballRadius;
             break;
         case PaddleOrientation::DOWN:
-            offsetY = -1.0f;
+            offsetY = -ballRadius;
             break;
     }
 
-    const int ballAngle = activeBall->getAngle();
-    const auto ballPos = activeBall->getCircle().getPosition();
+    auto ballPos = activeBall->getPosition();    
     if (paddleIntersectionRect.intersects(ballIntersectionRect)) {
-        activeBall->getCircle().setPosition(ballPos.x + offsetX, ballPos.y + offsetY);
+        activeBall->setPosition(ballPos.x + offsetX, ballPos.y + offsetY);
+        const auto distance = (orientation == PaddleOrientation::LEFT || orientation == PaddleOrientation::RIGHT) 
+                                ? ballPos.y - rect.getPosition().y : ballPos.x - rect.getPosition().x;
 
-        const int minRandomAngle = 0;
-        const int maxRandomAngle = 15;
+        auto increaseSpeed = [&]() {
+            auto ballSpeed = activeBall->getSpeed();
+            if (ballSpeed < activeBall->getMaxSpeed()) {
+                activeBall->setSpeed(ballSpeed + activeBall->getAcceleration());
+            }
+        };
 
-        switch(orientation) {
-            case Paddle::PaddleOrientation::LEFT:
-            case Paddle::PaddleOrientation::RIGHT:
-                activeBall->reflect(Ball::VectorComponent::X, (negative ? -1 : 1) * Random::range(minRandomAngle, maxRandomAngle));
+        switch (orientation) {
+            case PaddleOrientation::LEFT:
+            case PaddleOrientation::RIGHT:
+                activeBall->reflect(Ball::VectorComponent::X);
+                if ((distance > 0 && distance < 15 && std::sin(activeBall->getAngle()) < 0) || 
+                    (distance > paddleBounds.height - 15 && distance < paddleBounds.height) && std::sin(activeBall->getAngle()) > 0) {       
+                    activeBall->reflect(Ball::VectorComponent::Y);
+                    increaseSpeed();
+                }
                 break;
-            case Paddle::PaddleOrientation::DOWN:
-                activeBall->reflect(Ball::VectorComponent::Y, Random::range(minRandomAngle, maxRandomAngle));
+            case PaddleOrientation::DOWN:
+                activeBall->reflect(Ball::VectorComponent::Y);
+                if ((distance > 0 && distance < 15 && std::cos(activeBall->getAngle()) < 0) || 
+                    (distance > paddleBounds.width - 15 && distance < paddleBounds.width) && std::cos(activeBall->getAngle()) > 0) {       
+                    activeBall->reflect(Ball::VectorComponent::X);
+                    increaseSpeed();
+                }
                 break;
         }
     }
 }
 
-int Paddle::getSpeed() {
+int Paddle::getSpeed() const {
     return speed;
 }
 
-sf::RectangleShape& Paddle::getRect() {
-    return rect;
-}
-
-Paddle::PaddleOrientation Paddle::getOrientation() {
+Paddle::PaddleOrientation Paddle::getOrientation() const {
     return orientation;
 }
 
-std::pair<sf::FloatRect, sf::FloatRect> Paddle::getIntersectionRects() {
-    const auto ballBounds = activeBall->getCircle().getGlobalBounds();
+const sf::Vector2f& Paddle::getPosition() const {
+    return rect.getPosition();
+}
+
+sf::FloatRect Paddle::getGlobalBounds() const {
+    return rect.getGlobalBounds();
+}
+
+sf::FloatRect Paddle::getLocalBounds() const {
+    return rect.getLocalBounds();
+}
+
+std::pair<sf::FloatRect, sf::FloatRect> Paddle::getIntersectionRects() const {
+    const auto ballBounds = activeBall->getGlobalBounds();
     const auto paddleBounds = rect.getGlobalBounds();
 
     sf::FloatRect ballIntersectionRect;

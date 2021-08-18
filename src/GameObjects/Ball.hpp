@@ -11,17 +11,24 @@ public:
     Ball();
     void update(const sf::Time& deltaTime);
 
-    int getSpeed();
-    int getAngle();
-    
+    int getSpeed() const;
+    int getAngle() const;
+    int getRadius() const;
+    int getAcceleration() const;
+    int getMaxSpeed() const;
+    sf::FloatRect getGlobalBounds() const;
+    const sf::Vector2f& getPosition() const;
+
     void setSpeed(const int newSpeed);
     void setAngle(const int newAngle);
-    sf::CircleShape& getCircle();
+    void setPosition(const float x, const float y);
 
-    void reflect(VectorComponent vector, int angleOffset = 0);
+    void reflect(const VectorComponent vector);
 private:
     int speed;
     int angle;
+    int acceleration;
+    int maxSpeed;
     sf::CircleShape circle;
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

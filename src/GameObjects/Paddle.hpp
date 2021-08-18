@@ -15,10 +15,14 @@ public:
 
     void update(const sf::Time& deltaTime) override;
 
-    int getSpeed();
-    sf::RectangleShape& getRect();
-    PaddleOrientation getOrientation();
-    std::pair<sf::FloatRect, sf::FloatRect> getIntersectionRects();
+    int getSpeed() const;
+    const sf::Vector2f& getPosition() const;
+    sf::FloatRect getGlobalBounds() const;
+    sf::FloatRect getLocalBounds() const;
+    PaddleOrientation getOrientation() const;
+    std::pair<sf::FloatRect, sf::FloatRect> getIntersectionRects() const;
+
+    void setPosition(const float x, const float y);
 
     void moveUp(const sf::Time& deltaTime);
     void moveDown(const sf::Time& deltaTime);

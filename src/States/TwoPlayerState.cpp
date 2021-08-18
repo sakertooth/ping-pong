@@ -18,7 +18,7 @@ TwoPlayerState::TwoPlayerState() : paddleLeftScore(0), paddleRightScore(0), game
                                 &ball);
 
     ball.setAngle(45);
-    ball.getCircle().setPosition(100, yPos);
+    ball.setPosition(100, yPos);
 
     paddleLeftScoreText.setFont(Game::getInstance().getFont());
     paddleLeftScoreText.setString(std::to_string(paddleLeftScore));
@@ -36,6 +36,10 @@ TwoPlayerState::TwoPlayerState() : paddleLeftScore(0), paddleRightScore(0), game
     gameOverText.setOrigin(gameOverText.getLocalBounds().width / 2.0f, gameOverText.getLocalBounds().height / 2.0f);
     gameOverText.setPosition(xPos, yPos);
 
+    net.setSize(sf::Vector2f(2, window.getSize().y));
+    net.setOrigin(net.getLocalBounds().width / 2.0f, net.getLocalBounds().height / 2.0f);
+    net.setFillColor(sf::Color::White);
+    net.setPosition(xPos, yPos);
 }
 
 void TwoPlayerState::update(const sf::Time& deltaTime) {
@@ -45,8 +49,8 @@ void TwoPlayerState::update(const sf::Time& deltaTime) {
         ball.update(deltaTime);
 
         const auto& window = Game::getInstance().getWindow();
-        const auto paddleLeftBounds = paddleLeft.getRect().getGlobalBounds();
-        const auto paddleRightBounds = paddleRight.getRect().getGlobalBounds();
+        const auto paddleLeftBounds = paddleLeft.getGlobalBounds();
+        const auto paddleRightBounds = paddleRight.getGlobalBounds();
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W) &&
             paddleLeftBounds.top > 1.0f) {
@@ -69,7 +73,7 @@ void TwoPlayerState::update(const sf::Time& deltaTime) {
                 paddleRight.moveDown(deltaTime);
             }
 
-        const auto ballPos = ball.getCircle().getPosition();
+        const auto ballPos = ball.getPosition();
         const int ballAngle = ball.getAngle();
         const int offsetY = 0;
 
@@ -78,7 +82,7 @@ void TwoPlayerState::update(const sf::Time& deltaTime) {
 
         if (hitUp || hitBottom) {
             ball.reflect(Ball::VectorComponent::Y);
-            ball.getCircle().setPosition(ball.getCircle().getPosition().x, ball.getCircle().getPosition().y + (hitUp ? 1.0f : -1.0f));
+            ball.setPosition(ball.getPosition().x, ball.getPosition().y + (hitUp ? 1.0f : -1.0f));
             Game::getInstance().playSound(SoundManager::SoundType::BEEP);
         }
 
@@ -94,19 +98,21 @@ void TwoPlayerState::update(const sf::Time& deltaTime) {
             paddleRightScoreText.setString(std::to_string(++paddleRightScore));
 
             ball.reflect(Ball::VectorComponent::X);
-            ball.getCircle().setPosition(paddleLeft.getRect().getPosition().x + ball.getCircle().getRadius(), paddleLeft.getRect().getPosition().y);
+            ball.setPosition(paddleLeft.getPosition().x + ball.getRadius(), paddleLeft.getPosition().y);
         }
         else if (ballPos.x > window.getSize().x - 1.0f) {
             Game::getInstance().playSound(SoundManager::SoundType::PEEP);
             paddleLeftScoreText.setString(std::to_string(++paddleLeftScore));
 
             ball.reflect(Ball::VectorComponent::X);
-            ball.getCircle().setPosition(paddleRight.getRect().getPosition().x - ball.getCircle().getRadius(), paddleRight.getRect().getPosition().y);
+            ball.setPosition(paddleRight.getPosition().x - ball.getRadius(), paddleRight.getPosition().y);
+            ball.setSpeed(500);
         }
 
         if (paddleLeftScore == 11 || paddleRightScore == 11) {
             gameOver = true;
             gameOverText.setString(std::string("            Player ") + (paddleLeftScore == 11 ? "one" : "two") + " has won!\nPress spacebar for the main menu");
+            ball.setSpeed(500);
         }
     }
     else {
@@ -124,6 +130,7 @@ void TwoPlayerState::draw(sf::RenderTarget& target, sf::RenderStates states) con
         target.draw(paddleRight, states);
         target.draw(paddleLeftScoreText, states);
         target.draw(paddleRightScoreText, states);
+        target.draw(net, states);
         target.draw(ball, states);
     }
     else {

@@ -13,7 +13,7 @@ OnePlayerState::OnePlayerState() : score(0), gameOver(false) {
                 &ball);
 
     ball.setAngle(315);
-    ball.getCircle().setPosition(paddle.getRect().getPosition().x, paddle.getRect().getPosition().y - 10.0f);
+    ball.setPosition(paddle.getPosition().x, paddle.getPosition().y - 10.0f);
 
     scoreboard.setFont(Game::getInstance().getFont());
     scoreboard.setCharacterSize(16);
@@ -33,7 +33,7 @@ void OnePlayerState::update(const sf::Time &deltaTime) {
         paddle.update(deltaTime);
         ball.update(deltaTime);
 
-        const auto paddleBounds = paddle.getRect().getGlobalBounds();
+        const auto paddleBounds = paddle.getGlobalBounds();
         if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A)) 
             && paddleBounds.left > 0.0f) {
 
@@ -47,19 +47,19 @@ void OnePlayerState::update(const sf::Time &deltaTime) {
             paddle.moveRight(deltaTime);
         }
 
-        const auto ballPos = ball.getCircle().getPosition();
+        const auto ballPos = ball.getPosition();
         const auto ballAngle = ball.getAngle();
         const bool hitLeft = ballPos.x < 1.0f;
         const bool hitRight = ballPos.x > window.getSize().x - 1.0f;
 
         if (hitLeft || hitRight) {
             ball.reflect(Ball::VectorComponent::X);
-            ball.getCircle().setPosition(ball.getCircle().getPosition().x + (hitLeft ? 1.0f : -1.0f), ball.getCircle().getPosition().y);
+            ball.setPosition(ball.getPosition().x + (hitLeft ? 1.0f : -1.0f), ball.getPosition().y);
             Game::getInstance().playSound(SoundManager::SoundType::BEEP);
         }
         else if (ballPos.y < 1.0f) {
             ball.reflect(Ball::VectorComponent::Y);
-            ball.getCircle().setPosition(ball.getCircle().getPosition().x, ball.getCircle().getPosition().y + 1.0f);
+            ball.setPosition(ball.getPosition().x, ball.getPosition().y + 1.0f);
             Game::getInstance().playSound(SoundManager::SoundType::BEEP);
         }
 

@@ -54,7 +54,7 @@ MainMenuState::MainMenuState() {
                                 &backgroundBall);
 
     backgroundBall.setAngle(45);
-    backgroundBall.getCircle().setPosition(100, yPos);
+    backgroundBall.setPosition(100, yPos);
 
     if (!music.openFromFile("assets/artblock.ogg")) {
         std::cout << "could not load assets/artblock.ogg";
@@ -74,16 +74,16 @@ void MainMenuState::update(const sf::Time& deltaTime) {
     backgroundPaddleLeft.update(deltaTime);
 
     const auto& window = Game::getInstance().getWindow();
-    const auto ballTop = backgroundBall.getCircle().getPosition().y - backgroundBall.getCircle().getRadius();
-    const auto ballBottom = backgroundBall.getCircle().getPosition().y + backgroundBall.getCircle().getRadius();
+    const auto ballTop = backgroundBall.getPosition().y - backgroundBall.getRadius();
+    const auto ballBottom = backgroundBall.getPosition().y + backgroundBall.getRadius();
     const auto ballDirectionX = std::cos(backgroundBall.getAngle() * M_PI/180) > 0 ? 1 : -1;
 
     //Move paddles accordingly
-    const auto paddleLeftTop = backgroundPaddleLeft.getRect().getPosition().y -
-                                            backgroundPaddleLeft.getRect().getLocalBounds().height / 2.0f;
+    const auto paddleLeftTop = backgroundPaddleLeft.getPosition().y -
+                                            backgroundPaddleLeft.getLocalBounds().height / 2.0f;
 
-    const auto paddleLeftBottom = backgroundPaddleLeft.getRect().getPosition().y +
-                                                backgroundPaddleLeft.getRect().getLocalBounds().height / 2.0f;
+    const auto paddleLeftBottom = backgroundPaddleLeft.getPosition().y +
+                                                backgroundPaddleLeft.getLocalBounds().height / 2.0f;
 
     if (paddleLeftTop > ballTop && paddleLeftTop > 0.0f && ballDirectionX == -1) {
         backgroundPaddleLeft.moveUp(deltaTime);
@@ -93,11 +93,11 @@ void MainMenuState::update(const sf::Time& deltaTime) {
         backgroundPaddleLeft.moveDown(deltaTime);
     }
 
-    const auto paddleRightTop = backgroundPaddleRight.getRect().getPosition().y -
-                                            backgroundPaddleRight.getRect().getLocalBounds().height / 2.0f;
+    const auto paddleRightTop = backgroundPaddleRight.getPosition().y -
+                                            backgroundPaddleRight.getLocalBounds().height / 2.0f;
 
-    const auto paddleRightBottom = backgroundPaddleRight.getRect().getPosition().y +
-                                                backgroundPaddleRight.getRect().getLocalBounds().height / 2.0f;
+    const auto paddleRightBottom = backgroundPaddleRight.getPosition().y +
+                                                backgroundPaddleRight.getLocalBounds().height / 2.0f;
 
     if (paddleRightTop > ballTop && paddleRightTop > 0.0f && ballDirectionX == 1) {     
         backgroundPaddleRight.moveUp(deltaTime);
@@ -111,19 +111,19 @@ void MainMenuState::update(const sf::Time& deltaTime) {
     bool hitBottom = ballBottom > static_cast<float>(window.getSize().y) - 1.0f;
     if (hitTop || hitBottom) {
         backgroundBall.reflect(Ball::VectorComponent::Y);
-        backgroundBall.getCircle().setPosition(backgroundBall.getCircle().getPosition().x,
-                                                backgroundBall.getCircle().getPosition().y + (hitTop ? 1.0f : -1.0f));
+        backgroundBall.setPosition(backgroundBall.getPosition().x,
+                                                backgroundBall.getPosition().y + (hitTop ? 1.0f : -1.0f));
     }
 
     //Bring ball back if out of bounds
-    const auto ballPos = backgroundBall.getCircle().getPosition();
+    const auto ballPos = backgroundBall.getPosition();
     if (ballPos.x > static_cast<float>(window.getSize().x)) {
-        const auto paddleRightPos = backgroundPaddleRight.getRect().getPosition();
-        backgroundBall.getCircle().setPosition(paddleRightPos.x - 10.0f, paddleRightPos.y);
+        const auto paddleRightPos = backgroundPaddleRight.getPosition();
+        backgroundBall.setPosition(paddleRightPos.x - 10.0f, paddleRightPos.y);
     }
     else if (ballPos.x < 0.0f) {
-        const auto paddleLeftPos = backgroundPaddleLeft.getRect().getPosition();
-        backgroundBall.getCircle().setPosition(paddleLeftPos.x + 10.0f, paddleLeftPos.y);
+        const auto paddleLeftPos = backgroundPaddleLeft.getPosition();
+        backgroundBall.setPosition(paddleLeftPos.x + 10.0f, paddleLeftPos.y);
     }
 }
 

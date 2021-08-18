@@ -22,5 +22,6 @@ private:
     sf::Text gameOverText;
     bool gameOver;
 
+    sf::RectangleShape net;
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };
