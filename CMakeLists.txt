@@ -8,12 +8,14 @@ add_executable(pingpong $<$<CONFIG:Release>:WIN32>
     src/Main.cpp
     src/Game.cpp
     src/SoundManager.cpp
+    src/Random.cpp
     src/GameObjects/Button.cpp
     src/GameObjects/Ball.cpp
     src/GameObjects/Paddle.cpp
     src/States/MainMenuState.cpp
     src/States/SpacebarState.cpp
-    src/States/OnePlayerState.cpp)
+    src/States/OnePlayerState.cpp
+    src/States/TwoPlayerState.cpp)
 
 find_package(SFML COMPONENTS graphics audio REQUIRED)
 target_link_libraries(pingpong PUBLIC sfml-graphics sfml-audio)

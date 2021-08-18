@@ -49,24 +49,23 @@ void OnePlayerState::update(const sf::Time &deltaTime) {
 
         const auto ballPos = ball.getCircle().getPosition();
         const auto ballAngle = ball.getAngle();
-
-        bool hitLeft = ballPos.x < 1.0f;
-        bool hitRight = ballPos.x > window.getSize().x - 1.0f;
+        const bool hitLeft = ballPos.x < 1.0f;
+        const bool hitRight = ballPos.x > window.getSize().x - 1.0f;
 
         if (hitLeft || hitRight) {
-            ball.reflect(Ball::Axis::Y);
+            ball.reflect(Ball::VectorComponent::X);
             ball.getCircle().setPosition(ball.getCircle().getPosition().x + (hitLeft ? 1.0f : -1.0f), ball.getCircle().getPosition().y);
             Game::getInstance().playSound(SoundManager::SoundType::BEEP);
         }
         else if (ballPos.y < 1.0f) {
-            ball.reflect(Ball::Axis::X);
+            ball.reflect(Ball::VectorComponent::Y);
             ball.getCircle().setPosition(ball.getCircle().getPosition().x, ball.getCircle().getPosition().y + 1.0f);
             Game::getInstance().playSound(SoundManager::SoundType::BEEP);
         }
 
-        auto intersections = paddle.getIntersectionRects();
-        auto ballIntersectionRect = std::get<0>(intersections);
-        auto paddleIntersectionRect = std::get<1>(intersections);
+        const auto intersections = paddle.getIntersectionRects();
+        const auto ballIntersectionRect = std::get<0>(intersections);
+        const auto paddleIntersectionRect = std::get<1>(intersections);
 
         if (paddleIntersectionRect.intersects(ballIntersectionRect)) {
             Game::getInstance().playSound(SoundManager::SoundType::PLOP);
@@ -76,7 +75,7 @@ void OnePlayerState::update(const sf::Time &deltaTime) {
 
         if (ballPos.y > window.getSize().y) {
             gameOver = true;
-            gameOverText.setString("    Game over with a score of " + std::to_string(score) + "!\nPress spacebar for the Main Menu");
+            gameOverText.setString("    Game over with a score of " + std::to_string(score) + "!\nPress spacebar for the main menu");
             Game::getInstance().playSound(SoundManager::SoundType::PEEP);
         }
     }
@@ -90,7 +89,6 @@ void OnePlayerState::update(const sf::Time &deltaTime) {
 }
 
 void OnePlayerState::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-
     if (!gameOver) {
         target.draw(paddle, states);
         target.draw(ball, states);

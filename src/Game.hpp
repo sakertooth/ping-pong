@@ -31,5 +31,5 @@ private:
     sf::RenderWindow window;
     sf::Font font;
     SoundManager soundManager;
-    std::stack<std::unique_ptr<Updatable>> states;    
+    std::stack<std::unique_ptr<Updatable>> states;
 };

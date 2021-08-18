@@ -1,4 +1,5 @@
 #include "Paddle.hpp"
+#include "../Random.hpp"
 #include <iostream>
 
 Paddle::Paddle() {}
@@ -41,18 +42,22 @@ void Paddle::update(const sf::Time& deltaTime) {
             break;
     }
 
-    const auto ballAngle = activeBall->getAngle();
+    const int ballAngle = activeBall->getAngle();
     const auto ballPos = activeBall->getCircle().getPosition();
     if (paddleIntersectionRect.intersects(ballIntersectionRect)) {
         activeBall->getCircle().setPosition(ballPos.x + offsetX, ballPos.y + offsetY);
 
+        const int minRandomAngle = 0;
+        const int maxRandomAngle = 15;
+
         switch(orientation) {
             case Paddle::PaddleOrientation::LEFT:
             case Paddle::PaddleOrientation::RIGHT:
-                activeBall->reflect(Ball::Axis::Y);
+                activeBall->reflect(Ball::VectorComponent::X, (negative ? -1 : 1) * Random::range(minRandomAngle, maxRandomAngle));
                 break;
             case Paddle::PaddleOrientation::DOWN:
-                activeBall->reflect(Ball::Axis::X);
+                activeBall->reflect(Ball::VectorComponent::Y, Random::range(minRandomAngle, maxRandomAngle));
+                break;
         }
     }
 }

@@ -20,7 +20,7 @@ SpacebarState::SpacebarState(std::unique_ptr<Updatable> nextState) {
 
 void SpacebarState::update(const sf::Time& deltaTime) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && nextState) {
-        Game::getInstance().pushState(std::make_unique<OnePlayerState>());
+        Game::getInstance().pushState(std::move(nextState));
     }
 }
 

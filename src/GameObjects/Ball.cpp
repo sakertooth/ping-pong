@@ -42,16 +42,16 @@ void Ball::setAngle(const int newAngle) {
     angle = newAngle % 360;
 }
 
-void Ball::reflect(Axis axis, float angleOffset) {
+void Ball::reflect(VectorComponent axis, int angleOffset) {
     const auto ballX = std::cos(angle * M_PI/180);
     const auto ballY = std::sin(angle * M_PI/180);
 
     switch (axis) {
-        case Axis::X:
-            angle = std::atan2(-ballY, ballX) * 180/M_PI + angleOffset;
+        case VectorComponent::X:
+            angle = static_cast<int>(std::atan2(ballY, -ballX) * 180/M_PI) + angleOffset;
             break;
-        case Axis::Y:
-            angle = std::atan2(ballY, -ballX) * 180/M_PI + angleOffset;
+        case VectorComponent::Y:
+            angle = static_cast<int>(std::atan2(-ballY, ballX) * 180/M_PI) + angleOffset;
             break;
     }
 }

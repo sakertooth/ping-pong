@@ -3,7 +3,7 @@
 
 class Ball : public sf::Drawable {
 public:
-    enum class Axis {
+    enum class VectorComponent {
         X,
         Y
     };
@@ -18,7 +18,7 @@ public:
     void setAngle(const int newAngle);
     sf::CircleShape& getCircle();
 
-    void reflect(Axis axis, float angleOffset = 0);
+    void reflect(VectorComponent vector, int angleOffset = 0);
 private:
     int speed;
     int angle;

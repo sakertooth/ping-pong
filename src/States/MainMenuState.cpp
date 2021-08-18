@@ -3,6 +3,7 @@
 #include "MainMenuState.hpp"
 #include "SpacebarState.hpp"
 #include "OnePlayerState.hpp"
+#include "TwoPlayerState.hpp"
 #include "../Game.hpp"
 #include <iostream>
 #include <cmath>
@@ -29,7 +30,13 @@ MainMenuState::MainMenuState() {
     onePlayerButton.setPosition(xPos, yPos - 50.0f);
 
     twoPlayerButton.setText("Two Player");
-    twoPlayerButton.onClick([]() { std::cout << "clicked\n"; });
+    twoPlayerButton.onClick([&]() {
+        music.stop();
+
+        auto twoPlayerState = std::make_unique<TwoPlayerState>();
+        auto spacebarState = std::make_unique<SpacebarState>(std::move(twoPlayerState));
+        Game::getInstance().pushState(std::move(spacebarState));    
+    });
     twoPlayerButton.setPosition(xPos, yPos);
 
     exitButton.setText("Exit");
@@ -103,7 +110,7 @@ void MainMenuState::update(const sf::Time& deltaTime) {
     bool hitTop = ballTop < 1.0f;
     bool hitBottom = ballBottom > static_cast<float>(window.getSize().y) - 1.0f;
     if (hitTop || hitBottom) {
-        backgroundBall.reflect(Ball::Axis::X);
+        backgroundBall.reflect(Ball::VectorComponent::Y);
         backgroundBall.getCircle().setPosition(backgroundBall.getCircle().getPosition().x,
                                                 backgroundBall.getCircle().getPosition().y + (hitTop ? 1.0f : -1.0f));
     }
