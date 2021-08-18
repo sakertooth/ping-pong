@@ -1,25 +1,36 @@
-﻿cmake_minimum_required(VERSION 3.0.0)
-project("Ping Pong")
+cmake_minimum_required(VERSION 3.0.0)
+project(pingpong VERSION 0.1.0)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-add_executable(pingpong WIN32
-					${CMAKE_SOURCE_DIR}/src/Main.cpp
-					${CMAKE_SOURCE_DIR}/src/Game.cpp
-					${CMAKE_SOURCE_DIR}/src/Ball.cpp
-					${CMAKE_SOURCE_DIR}/src/States/MainMenuState.cpp
-					${CMAKE_SOURCE_DIR}/src/States/ChooseDifficultyState.cpp
-					${CMAKE_SOURCE_DIR}/src/States/TwoPlayerState.cpp
-					${CMAKE_SOURCE_DIR}/src/States/SpacebarToStartState.cpp
-					${CMAKE_SOURCE_DIR}/src/States/OnePlayerState.cpp
-					${CMAKE_SOURCE_DIR}/src/States/GameOverState.cpp)
+add_executable(pingpong $<$<CONFIG:Release>:WIN32>
+    src/Main.cpp
+    src/Game.cpp
+    src/SoundManager.cpp
+    src/Random.cpp
+    src/GameObjects/Button.cpp
+    src/GameObjects/Ball.cpp
+    src/GameObjects/Paddle.cpp
+    src/States/MainMenuState.cpp
+    src/States/SpacebarState.cpp
+    src/States/OnePlayerState.cpp
+    src/States/TwoPlayerState.cpp)
 
-target_include_directories(pingpong PRIVATE ${CMAKE_SOURCE_DIR}/include)
+find_package(SFML COMPONENTS graphics audio REQUIRED)
+target_link_libraries(pingpong PUBLIC sfml-graphics sfml-audio)
 
-find_package(SFML COMPONENTS main graphics audio REQUIRED)
-target_link_libraries(pingpong PRIVATE sfml-main sfml-graphics sfml-audio)
+if(WIN32)
+    find_package(SFML COMPONENTS main REQUIRED)
+    target_link_libraries(pingpong PUBLIC sfml-main)
 
-find_package(TGUI CONFIG REQUIRED)
-target_link_libraries(pingpong PRIVATE tgui)
+    add_custom_command(TARGET pingpong POST_BUILD
+                        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:pingpong> 
+                        $<TARGET_RUNTIME_DLLS:pingpong>/../openal32.dll
+                        $<TARGET_FILE_DIR:pingpong>
+                        COMMAND_EXPAND_LISTS)
+endif()
 
-file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
+add_custom_command(TARGET pingpong POST_BUILD
+                   COMMAND ${CMAKE_COMMAND} -E copy_directory
+                       ${CMAKE_SOURCE_DIR}/assets $<TARGET_FILE_DIR:pingpong>/assets)

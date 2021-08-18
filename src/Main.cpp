@@ -1,16 +1,14 @@
 #include "Game.hpp"
-#include <iostream>
+#include "States/MainMenuState.hpp"
 
-int main()
-{
-	auto &game = Pong::Game::getInstance();
-	auto deltaClock = sf::Clock::Clock();
-	game.init();
+int main() {
+    auto &game = Game::getInstance();
+    auto clock = sf::Clock();
 
-	while (game.isRunning())
-	{
-		game.handleEvent();
-		game.update(deltaClock.restart());
-		game.draw();
-	}
+    game.pushState(std::make_unique<MainMenuState>());
+    while (game.isRunning()) {
+        game.handleEvent();
+        game.update(clock.restart());
+        game.draw();
+    }
 }
