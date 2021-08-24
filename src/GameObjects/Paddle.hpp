@@ -1,8 +1,8 @@
 #pragma once
-#include "../Updatable.hpp"
+#include <SFML/Graphics.hpp>
 #include "Ball.hpp"
 
-class Paddle : public Updatable {
+class Paddle : public sf::Drawable {
 public:
     enum class PaddleOrientation {
         LEFT,
@@ -11,16 +11,13 @@ public:
     };
 
     Paddle();
-    Paddle(const sf::Vector2f& position, const sf::Vector2f& size, PaddleOrientation orientation, Ball* activeBall);
-
-    void update(const sf::Time& deltaTime) override;
+    Paddle(const sf::Vector2f& position, PaddleOrientation orientation);
 
     int getSpeed() const;
     const sf::Vector2f& getPosition() const;
     sf::FloatRect getGlobalBounds() const;
     sf::FloatRect getLocalBounds() const;
     PaddleOrientation getOrientation() const;
-    std::pair<sf::FloatRect, sf::FloatRect> getIntersectionRects() const;
 
     void setPosition(const float x, const float y);
 
@@ -32,8 +29,7 @@ public:
 private:
     int speed;
     sf::RectangleShape rect;
-    Ball* activeBall;
     PaddleOrientation orientation;
-
+    
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 };

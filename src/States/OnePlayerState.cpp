@@ -1,16 +1,14 @@
 #include "OnePlayerState.hpp"
 #include "MainMenuState.hpp"
+#include "../Collision.hpp"
 #include "../Game.hpp"
 #include <cmath>
 #include <iostream>
 
 OnePlayerState::OnePlayerState() : score(0), gameOver(false) {
-    const auto& window = Game::getInstance().getWindow();
-    paddle = Paddle(sf::Vector2f(static_cast<float>(window.getSize().x / 2), 
-                                static_cast<float>(window.getSize().y - 15.0f)),
-                sf::Vector2f(75, 5), 
-                Paddle::PaddleOrientation::DOWN,
-                &ball);
+    auto windowSize = Game::getInstance().getWindow().getSize();
+    paddle = Paddle{sf::Vector2f{static_cast<float>(windowSize.x / 2), 
+                                    static_cast<float>(windowSize.y - 15.0f)}, Paddle::PaddleOrientation::DOWN};
 
     ball.setAngle(315);
     ball.setPosition(paddle.getPosition().x, paddle.getPosition().y - 10.0f);
@@ -24,56 +22,54 @@ OnePlayerState::OnePlayerState() : score(0), gameOver(false) {
     gameOverText.setCharacterSize(32);
     gameOverText.setString("    Game over with a score of " + std::to_string(score) + "!\nPress spacebar for the Main Menu");
     gameOverText.setOrigin(gameOverText.getLocalBounds().width / 2.0f, gameOverText.getLocalBounds().height / 2.0f);
-    gameOverText.setPosition(static_cast<float>(window.getSize().x / 2), 
-                                static_cast<float>(window.getSize().y / 2));
+    gameOverText.setPosition(static_cast<float>(windowSize.x / 2), 
+                                static_cast<float>(windowSize.y / 2));
 }
 
 void OnePlayerState::update(const sf::Time &deltaTime) {
     if (!gameOver) {
-        paddle.update(deltaTime);
         ball.update(deltaTime);
 
-        const auto paddleBounds = paddle.getGlobalBounds();
+        auto paddleBounds = paddle.getGlobalBounds();
         if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Left) || sf::Keyboard::isKeyPressed(sf::Keyboard::A)) 
             && paddleBounds.left > 0.0f) {
-
             paddle.moveLeft(deltaTime);
         }  
 
-        const auto& window = Game::getInstance().getWindow();
+        auto& window = Game::getInstance().getWindow();
         if ((sf::Keyboard::isKeyPressed(sf::Keyboard::Right) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) 
-            && paddleBounds.left + paddleBounds.width < window.getSize().x) {
-            
+            && paddleBounds.left + paddleBounds.width < window.getSize().x) {       
             paddle.moveRight(deltaTime);
         }
 
-        const auto ballPos = ball.getPosition();
-        const auto ballAngle = ball.getAngle();
-        const bool hitLeft = ballPos.x < 1.0f;
-        const bool hitRight = ballPos.x > window.getSize().x - 1.0f;
+        if (Collision::ballCollidingWithWindow(ball, Collision::WindowBorder::LEFT) ||
+            Collision::ballCollidingWithWindow(ball, Collision::WindowBorder::RIGHT)) {
 
-        if (hitLeft || hitRight) {
-            ball.reflect(Ball::VectorComponent::X);
-            ball.setPosition(ball.getPosition().x + (hitLeft ? 1.0f : -1.0f), ball.getPosition().y);
+            Collision::applyCollisionOffset(ball, Ball::VectorComponent::X);
+            ball.invert(Ball::VectorComponent::X);
             Game::getInstance().playSound(SoundManager::SoundType::BEEP);
         }
-        else if (ballPos.y < 1.0f) {
-            ball.reflect(Ball::VectorComponent::Y);
-            ball.setPosition(ball.getPosition().x, ball.getPosition().y + 1.0f);
+        else if (Collision::ballCollidingWithWindow(ball, Collision::WindowBorder::TOP)) {
+            Collision::applyCollisionOffset(ball, Ball::VectorComponent::Y);
+            ball.invert(Ball::VectorComponent::Y);
             Game::getInstance().playSound(SoundManager::SoundType::BEEP);
         }
 
-        const auto intersections = paddle.getIntersectionRects();
-        const auto ballIntersectionRect = std::get<0>(intersections);
-        const auto paddleIntersectionRect = std::get<1>(intersections);
-
-        if (paddleIntersectionRect.intersects(ballIntersectionRect)) {
+        auto ballPos = ball.getPosition();
+        if (Collision::paddleCollidingWithBall(paddle, ball)) {
+            Collision::applyCollisionOffset(ball, Ball::VectorComponent::Y);
+            ball.invert(Ball::VectorComponent::Y);
+            
             Game::getInstance().playSound(SoundManager::SoundType::PLOP);
             ++score;
             scoreboard.setString("Score: " + std::to_string(score));
+
+            if (score % 5 == 0) {
+                ball.accelerate();
+            }
         }
 
-        if (ballPos.y > window.getSize().y) {
+        if (Collision::ballCollidingWithWindow(ball, Collision::WindowBorder::BOTTOM)) {
             gameOver = true;
             gameOverText.setString("    Game over with a score of " + std::to_string(score) + "!\nPress spacebar for the main menu");
             Game::getInstance().playSound(SoundManager::SoundType::PEEP);

@@ -13,17 +13,18 @@ public:
 
     int getSpeed() const;
     int getAngle() const;
-    int getRadius() const;
+    float getRadius() const;
     int getAcceleration() const;
     int getMaxSpeed() const;
     sf::FloatRect getGlobalBounds() const;
     const sf::Vector2f& getPosition() const;
 
-    void setSpeed(const int newSpeed);
+    void accelerate();
     void setAngle(const int newAngle);
     void setPosition(const float x, const float y);
-
-    void reflect(const VectorComponent vector);
+    void resetSpeed();
+    
+    void invert(const VectorComponent vector);
 private:
     int speed;
     int angle;

@@ -3,8 +3,6 @@
 #include "Ball.hpp"
 #include "../Game.hpp"
 #include <cmath>
-#include <iostream>
-#include <random>
 
 Ball::Ball() : speed(500), angle(0), acceleration(25), maxSpeed(700) {
     circle.setRadius(5);
@@ -13,7 +11,7 @@ Ball::Ball() : speed(500), angle(0), acceleration(25), maxSpeed(700) {
 }
 
 void Ball::update(const sf::Time& deltaTime) {
-    const auto deltaTimeSeconds = deltaTime.asSeconds();
+    auto deltaTimeSeconds = deltaTime.asSeconds();
     circle.move(static_cast<float>(std::cos(angle * M_PI/180)) * speed * deltaTimeSeconds, 
                 static_cast<float>(std::sin(angle * M_PI/180)) * speed * deltaTimeSeconds);
 }
@@ -30,7 +28,7 @@ int Ball::getAngle() const {
     return angle;
 }
 
-int Ball::getRadius() const {
+float Ball::getRadius() const {
     return circle.getRadius();
 }
 
@@ -50,8 +48,14 @@ const sf::Vector2f& Ball::getPosition() const {
     return circle.getPosition();
 }
 
-void Ball::setSpeed(const int newSpeed) {
-    speed = newSpeed;
+void Ball::accelerate() {
+    if (speed < maxSpeed) {
+        speed += acceleration;
+    }
+}
+
+void Ball::resetSpeed() {
+    speed = 500;
 }
  
 void Ball::setAngle(const int newAngle) {
@@ -62,11 +66,11 @@ void Ball::setPosition(const float x, const float y) {
     circle.setPosition(x, y);
 }
 
-void Ball::reflect(const VectorComponent axis) {
-    const auto ballX = std::cos(angle * M_PI/180);
-    const auto ballY = std::sin(angle * M_PI/180);
-    const int invertX = axis == VectorComponent::X ? -1 : 1;
-    const int invertY = axis == VectorComponent::Y ? -1 : 1;
+void Ball::invert(const VectorComponent axis) {
+    auto ballX = std::cos(angle * M_PI/180);
+    auto ballY = std::sin(angle * M_PI/180);
+    int invertX = axis == VectorComponent::X ? -1 : 1;
+    int invertY = axis == VectorComponent::Y ? -1 : 1;
 
-    angle = std::round(std::atan2(invertY * ballY, invertX * ballX) * 180/M_PI);
+    angle = static_cast<int>(std::atan2(invertY * ballY, invertX * ballX) * 180/M_PI);
 }

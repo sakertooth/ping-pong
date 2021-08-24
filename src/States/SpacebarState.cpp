@@ -13,12 +13,12 @@ SpacebarState::SpacebarState(std::unique_ptr<Updatable> nextState) {
     spacebarContinueText.setOrigin(std::round(spacebarContinueText.getLocalBounds().width / 2.0f),
                                     std::round(spacebarContinueText.getLocalBounds().height / 2.0f));
 
-    const auto& window = Game::getInstance().getWindow();
+    auto& window = Game::getInstance().getWindow();
     spacebarContinueText.setPosition(static_cast<float>(window.getSize().x / 2), 
                                     static_cast<float>(window.getSize().y / 2));
 }
 
-void SpacebarState::update(const sf::Time& deltaTime) {
+void SpacebarState::update(const sf::Time&) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space) && nextState) {
         Game::getInstance().pushState(std::move(nextState));
     }

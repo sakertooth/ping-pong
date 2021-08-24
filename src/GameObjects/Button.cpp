@@ -10,13 +10,13 @@ Button::Button() {
     text.setCharacterSize(32);
 }
 
-void Button::update(const sf::Time& deltaTime) {
-    const auto& mousePos = sf::Mouse::getPosition(Game::getInstance().getWindow());
+void Button::update(const sf::Time&) {
+    auto mousePos = sf::Mouse::getPosition(Game::getInstance().getWindow());
     if (rect.getGlobalBounds().contains(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y))) {
         rect.setFillColor(hoverColor);
         text.setFillColor(rectColor);
 
-        const auto& clicked = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+        bool clicked = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
         if (!isMouseDown && clicked) {
             isMouseDown = true;
             if (onClickFn) {
@@ -51,7 +51,7 @@ void Button::setText(const std::string& str) {
 
     float rectWidth = text.getLocalBounds().width + 15;
     float rectHeight = text.getLocalBounds().height + 15;
-    rect.setSize(sf::Vector2f(rectWidth, rectHeight));
+    rect.setSize(sf::Vector2f{rectWidth, rectHeight});
 }
 
 void Button::draw(sf::RenderTarget& target, sf::RenderStates states) const {
