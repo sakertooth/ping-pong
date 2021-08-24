@@ -16,6 +16,11 @@ add_executable(pingpong $<$<CONFIG:Release>:WIN32>
     src/States/OnePlayerState.cpp
     src/States/TwoPlayerState.cpp)
 
+target_compile_options(pingpong PRIVATE
+  $<$<CXX_COMPILER_ID:MSVC>:/W4 /WX>
+  $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wall -Wextra -Wpedantic -Werror>
+)
+
 find_package(SFML COMPONENTS graphics audio REQUIRED)
 target_link_libraries(pingpong PUBLIC sfml-graphics sfml-audio)
 
