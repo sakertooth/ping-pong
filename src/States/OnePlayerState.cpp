@@ -55,7 +55,6 @@ void OnePlayerState::update(const sf::Time &deltaTime) {
             Game::getInstance().playSound(SoundManager::SoundType::BEEP);
         }
 
-        auto ballPos = ball.getPosition();
         if (Collision::paddleCollidingWithBall(paddle, ball)) {
             Collision::applyCollisionOffset(ball, Ball::VectorComponent::Y);
             ball.invert(Ball::VectorComponent::Y);
