@@ -3,6 +3,7 @@
 #include "GameObjects/Ball.hpp"
 #include "Game.hpp"
 #include <SFML/Graphics.hpp>
+#include <cmath>
 
 class Collision {
 public:
