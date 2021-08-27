@@ -21,7 +21,7 @@ public:
     void clearAllStates();
     void playSound(SoundManager::SoundType soundType);
 
-    const bool isRunning();
+    bool isRunning();
 
     static Game& getInstance();
     const sf::RenderWindow& getWindow();

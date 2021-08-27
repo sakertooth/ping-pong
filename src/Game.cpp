@@ -74,7 +74,7 @@ void Game::playSound(SoundManager::SoundType soundType) {
 }
 
 
-const bool Game::isRunning() {
+bool Game::isRunning() {
     return window.isOpen();
 }
 
